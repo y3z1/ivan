@@ -7,18 +7,18 @@
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=DM+Mono:wght@300;400;500&family=Libre+Baskerville:ital@0;1&display=swap" rel="stylesheet">
 <style>
   :root {
-    --forest: #0f1f0f;
-    --moss: #1a3320;
-    --canopy: #1e4d28;
-    --fern: #2e6b3e;
-    --lichen: #4a8c5c;
-    --mist: #a8c8b0;
-    --bark: #7a4f10;
-    --amber: #b8860b;
-    --cream: #f2ebe0;
-    --fog: #e9e1d2;
-    --ink: #141410;
-    --parchment: #f7f2e8;
+    --forest: #1a2e1a;
+    --moss: #2d4a2d;
+    --canopy: #3d6b3d;
+    --fern: #5a8a5a;
+    --lichen: #8ab88a;
+    --mist: #c8dfc8;
+    --bark: #8b6914;
+    --amber: #d4a017;
+    --cream: #f5f0e8;
+    --fog: #e8e4dc;
+    --ink: #1a1a14;
+    --parchment: #faf7f0;
   }
 
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -247,7 +247,7 @@
   .hero-right-bg {
     position: absolute;
     inset: 0;
-    background: linear-gradient(135deg, #d8e8d8 0%, #e5ddd0 60%, #f0ebe0 100%);
+    background: linear-gradient(135deg, var(--mist) 0%, var(--fog) 60%, var(--cream) 100%);
   }
 
   .hero-scroll-hint {
@@ -337,7 +337,7 @@
   .about-summary {
     font-size: 1.05rem;
     line-height: 1.8;
-    color: #1e2818;
+    color: #3a3a2e;
     border-left: 2px solid var(--lichen);
     padding-left: 1.5rem;
     font-style: italic;
@@ -380,7 +380,7 @@
   .about-text p {
     font-size: 0.95rem;
     line-height: 1.9;
-    color: #1e2818;
+    color: #3a3a2e;
     margin-bottom: 1.5rem;
   }
 
@@ -405,13 +405,9 @@
   .timeline-item {
     position: relative;
     padding: 0 0 3.5rem 2.5rem;
-    opacity: 0;
-    transform: translateX(-20px);
-    transition: opacity 0.6s, transform 0.6s;
-  }
-  .timeline-item.visible {
     opacity: 1;
     transform: none;
+    transition: opacity 0.6s, transform 0.6s;
   }
   .timeline-item::before {
     content: '';
@@ -450,7 +446,7 @@
   .tl-desc {
     font-size: 0.88rem;
     line-height: 1.75;
-    color: rgba(200, 223, 200, 0.95);
+    color: rgba(200, 223, 200, 0.8);
   }
 
   /* SKILLS */
@@ -519,10 +515,6 @@
     border-top: 2px solid var(--amber);
     background: var(--parchment);
     transition: transform 0.35s cubic-bezier(.23,1,.32,1), box-shadow 0.35s;
-    opacity: 0;
-    transform: translateY(25px);
-  }
-  .edu-card.visible {
     opacity: 1;
     transform: none;
   }
@@ -677,13 +669,9 @@
   }
 
   .fade-in-section {
-    opacity: 0;
-    transform: translateY(30px);
-    transition: opacity 0.7s cubic-bezier(.23,1,.32,1), transform 0.7s cubic-bezier(.23,1,.32,1);
-  }
-  .fade-in-section.visible {
     opacity: 1;
     transform: none;
+    transition: opacity 0.7s cubic-bezier(.23,1,.32,1), transform 0.7s cubic-bezier(.23,1,.32,1);
   }
 
   /* MOBILE */
