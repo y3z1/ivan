@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -8,711 +7,708 @@
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=DM+Mono:wght@300;400;500&family=Libre+Baskerville:ital@0;1&display=swap" rel="stylesheet">
 <style>
   :root {
-    --forest: #1a2e1a;
-    --moss: #2d4a2d;
-    --canopy: #3d6b3d;
-    --fern: #5a8a5a;
-    --lichen: #8ab88a;
-    --mist: #c8dfc8;
-    --bark: #8b6914;
-    --amber: #d4a017;
-    --cream: #f5f0e8;
-    --fog: #e8e4dc;
-    --ink: #1a1a14;
-    --parchment: #faf7f0;
+    --forest: #0f1f0f;
+    --moss: #1a3320;
+    --canopy: #1e4d28;
+    --fern: #2e6b3e;
+    --lichen: #4a8c5c;
+    --mist: #a8c8b0;
+    --bark: #7a4f10;
+    --amber: #b8860b;
+    --cream: #f2ebe0;
+    --fog: #e9e1d2;
+    --ink: #141410;
+    --parchment: #f7f2e8;
   }
 
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-html { scroll-behavior: smooth; }
+  html { scroll-behavior: smooth; }
 
-body {
-background: var(–parchment);
-color: var(–ink);
-font-family: ‘Libre Baskerville’, Georgia, serif;
-overflow-x: hidden;
-cursor: none;
-}
+  body {
+    background: var(--parchment);
+    color: var(--ink);
+    font-family: 'Libre Baskerville', Georgia, serif;
+    overflow-x: hidden;
+    cursor: none;
+  }
 
-/* CUSTOM CURSOR */
-.cursor {
-width: 12px; height: 12px;
-background: var(–canopy);
-border-radius: 50%;
-position: fixed;
-top: 0; left: 0;
-pointer-events: none;
-z-index: 9999;
-transition: transform 0.15s ease, background 0.2s;
-mix-blend-mode: multiply;
-}
-.cursor-ring {
-width: 36px; height: 36px;
-border: 1.5px solid var(–canopy);
-border-radius: 50%;
-position: fixed;
-top: 0; left: 0;
-pointer-events: none;
-z-index: 9998;
-transition: transform 0.35s cubic-bezier(.23,1,.32,1), opacity 0.2s;
-opacity: 0.6;
-}
-body:hover .cursor { transform: translate(-50%, -50%); }
+  /* CUSTOM CURSOR */
+  .cursor {
+    width: 12px; height: 12px;
+    background: var(--canopy);
+    border-radius: 50%;
+    position: fixed;
+    top: 0; left: 0;
+    pointer-events: none;
+    z-index: 9999;
+    transition: transform 0.15s ease, background 0.2s;
+    mix-blend-mode: multiply;
+  }
+  .cursor-ring {
+    width: 36px; height: 36px;
+    border: 1.5px solid var(--canopy);
+    border-radius: 50%;
+    position: fixed;
+    top: 0; left: 0;
+    pointer-events: none;
+    z-index: 9998;
+    transition: transform 0.35s cubic-bezier(.23,1,.32,1), opacity 0.2s;
+    opacity: 0.6;
+  }
+  body:hover .cursor { transform: translate(-50%, -50%); }
 
-/* NOISE OVERLAY */
-body::before {
-content: ‘’;
-position: fixed;
-inset: 0;
-background-image: url(“data:image/svg+xml,%3Csvg viewBox=‘0 0 256 256’ xmlns=‘http://www.w3.org/2000/svg’%3E%3Cfilter id=‘noise’%3E%3CfeTurbulence type=‘fractalNoise’ baseFrequency=‘0.9’ numOctaves=‘4’ stitchTiles=‘stitch’/%3E%3C/filter%3E%3Crect width=‘100%25’ height=‘100%25’ filter=‘url(%23noise)’ opacity=‘0.04’/%3E%3C/svg%3E”);
-pointer-events: none;
-z-index: 1000;
-opacity: 0.4;
-}
+  /* NOISE OVERLAY */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 1000;
+    opacity: 0.4;
+  }
 
-/* NAV */
-nav {
-position: fixed;
-top: 0; left: 0; right: 0;
-z-index: 100;
-padding: 1.5rem 3rem;
-display: flex;
-justify-content: space-between;
-align-items: center;
-mix-blend-mode: normal;
-background: linear-gradient(to bottom, rgba(250,247,240,0.95), transparent);
-}
-.nav-logo {
-font-family: ‘DM Mono’, monospace;
-font-size: 0.7rem;
-letter-spacing: 0.2em;
-color: var(–moss);
-text-transform: uppercase;
-}
-.nav-links {
-display: flex;
-gap: 2.5rem;
-list-style: none;
-}
-.nav-links a {
-font-family: ‘DM Mono’, monospace;
-font-size: 0.65rem;
-letter-spacing: 0.18em;
-text-transform: uppercase;
-color: var(–moss);
-text-decoration: none;
-position: relative;
-padding-bottom: 2px;
-transition: color 0.3s;
-}
-.nav-links a::after {
-content: ‘’;
-position: absolute;
-bottom: 0; left: 0;
-width: 0; height: 1px;
-background: var(–amber);
-transition: width 0.4s cubic-bezier(.23,1,.32,1);
-}
-.nav-links a:hover { color: var(–forest); }
-.nav-links a:hover::after { width: 100%; }
+  /* NAV */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    padding: 1.5rem 3rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    mix-blend-mode: normal;
+    background: linear-gradient(to bottom, rgba(250,247,240,0.95), transparent);
+  }
+  .nav-logo {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.7rem;
+    letter-spacing: 0.2em;
+    color: var(--moss);
+    text-transform: uppercase;
+  }
+  .nav-links {
+    display: flex;
+    gap: 2.5rem;
+    list-style: none;
+  }
+  .nav-links a {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--moss);
+    text-decoration: none;
+    position: relative;
+    padding-bottom: 2px;
+    transition: color 0.3s;
+  }
+  .nav-links a::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0;
+    width: 0; height: 1px;
+    background: var(--amber);
+    transition: width 0.4s cubic-bezier(.23,1,.32,1);
+  }
+  .nav-links a:hover { color: var(--forest); }
+  .nav-links a:hover::after { width: 100%; }
 
-/* HERO */
-#hero {
-min-height: 100vh;
-display: grid;
-grid-template-columns: 1fr 1fr;
-position: relative;
-overflow: hidden;
-}
+  /* HERO */
+  #hero {
+    min-height: 100vh;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    position: relative;
+    overflow: hidden;
+  }
 
-.hero-left {
-display: flex;
-flex-direction: column;
-justify-content: flex-end;
-padding: 8rem 4rem 6rem;
-position: relative;
-z-index: 2;
-}
+  .hero-left {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 8rem 4rem 6rem;
+    position: relative;
+    z-index: 2;
+  }
 
-.hero-tag {
-font-family: ‘DM Mono’, monospace;
-font-size: 0.65rem;
-letter-spacing: 0.25em;
-text-transform: uppercase;
-color: var(–bark);
-margin-bottom: 1.5rem;
-opacity: 0;
-transform: translateY(20px);
-animation: fadeUp 0.8s 0.3s forwards;
-}
+  .hero-tag {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--bark);
+    margin-bottom: 1.5rem;
+    opacity: 0;
+    transform: translateY(20px);
+    animation: fadeUp 0.8s 0.3s forwards;
+  }
 
-.hero-name {
-font-family: ‘Playfair Display’, serif;
-font-size: clamp(3.5rem, 6vw, 6rem);
-font-weight: 900;
-line-height: 1;
-color: var(–forest);
-opacity: 0;
-transform: translateY(30px);
-animation: fadeUp 0.9s 0.5s forwards;
-letter-spacing: -0.02em;
-}
+  .hero-name {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(3.5rem, 6vw, 6rem);
+    font-weight: 900;
+    line-height: 1;
+    color: var(--forest);
+    opacity: 0;
+    transform: translateY(30px);
+    animation: fadeUp 0.9s 0.5s forwards;
+    letter-spacing: -0.02em;
+  }
 
-.hero-name em {
-font-style: italic;
-color: var(–canopy);
-}
+  .hero-name em {
+    font-style: italic;
+    color: var(--canopy);
+  }
 
-.hero-title {
-font-family: ‘Playfair Display’, serif;
-font-size: clamp(1rem, 1.5vw, 1.4rem);
-font-style: italic;
-color: var(–fern);
-margin-top: 1.5rem;
-opacity: 0;
-transform: translateY(20px);
-animation: fadeUp 0.8s 0.7s forwards;
-}
+  .hero-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(1rem, 1.5vw, 1.4rem);
+    font-style: italic;
+    color: var(--fern);
+    margin-top: 1.5rem;
+    opacity: 0;
+    transform: translateY(20px);
+    animation: fadeUp 0.8s 0.7s forwards;
+  }
 
-.hero-badge {
-display: inline-block;
-margin-top: 2rem;
-padding: 0.5rem 1.2rem;
-border: 1px solid var(–amber);
-font-family: ‘DM Mono’, monospace;
-font-size: 0.65rem;
-letter-spacing: 0.15em;
-text-transform: uppercase;
-color: var(–bark);
-opacity: 0;
-animation: fadeUp 0.8s 0.9s forwards;
-width: fit-content;
-}
+  .hero-badge {
+    display: inline-block;
+    margin-top: 2rem;
+    padding: 0.5rem 1.2rem;
+    border: 1px solid var(--amber);
+    font-family: 'DM Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--bark);
+    opacity: 0;
+    animation: fadeUp 0.8s 0.9s forwards;
+    width: fit-content;
+  }
 
-.hero-contacts {
-display: flex;
-flex-direction: column;
-gap: 0.5rem;
-margin-top: 3rem;
-opacity: 0;
-animation: fadeUp 0.8s 1.1s forwards;
-}
-.hero-contacts a {
-font-family: ‘DM Mono’, monospace;
-font-size: 0.65rem;
-letter-spacing: 0.1em;
-color: var(–moss);
-text-decoration: none;
-transition: color 0.3s;
-}
-.hero-contacts a:hover { color: var(–bark); }
+  .hero-contacts {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin-top: 3rem;
+    opacity: 0;
+    animation: fadeUp 0.8s 1.1s forwards;
+  }
+  .hero-contacts a {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.1em;
+    color: var(--moss);
+    text-decoration: none;
+    transition: color 0.3s;
+  }
+  .hero-contacts a:hover { color: var(--bark); }
 
-.hero-right {
-position: relative;
-overflow: hidden;
-}
+  .hero-right {
+    position: relative;
+    overflow: hidden;
+  }
 
-/* SVG forest map art */
-.hero-map {
-position: absolute;
-inset: 0;
-width: 100%;
-height: 100%;
-opacity: 0;
-animation: fadeIn 1.5s 0.2s forwards;
-}
+  /* SVG forest map art */
+  .hero-map {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    animation: fadeIn 1.5s 0.2s forwards;
+  }
 
-/* Contour lines background */
-.hero-right::before {
-content: ‘’;
-position: absolute;
-inset: 0;
-background:
-repeating-linear-gradient(
-0deg,
-transparent,
-transparent 38px,
-rgba(45, 74, 45, 0.08) 38px,
-rgba(45, 74, 45, 0.08) 39px
-),
-repeating-linear-gradient(
-90deg,
-transparent,
-transparent 58px,
-rgba(45, 74, 45, 0.05) 58px,
-rgba(45, 74, 45, 0.05) 59px
-);
-z-index: 1;
-}
+  /* Contour lines background */
+  .hero-right::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      repeating-linear-gradient(
+        0deg,
+        transparent,
+        transparent 38px,
+        rgba(45, 74, 45, 0.08) 38px,
+        rgba(45, 74, 45, 0.08) 39px
+      ),
+      repeating-linear-gradient(
+        90deg,
+        transparent,
+        transparent 58px,
+        rgba(45, 74, 45, 0.05) 58px,
+        rgba(45, 74, 45, 0.05) 59px
+      );
+    z-index: 1;
+  }
 
-.hero-right-bg {
-position: absolute;
-inset: 0;
-background: linear-gradient(135deg, var(–mist) 0%, var(–fog) 60%, var(–cream) 100%);
-}
+  .hero-right-bg {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, #d8e8d8 0%, #e5ddd0 60%, #f0ebe0 100%);
+  }
 
-.hero-scroll-hint {
-position: absolute;
-bottom: 3rem;
-left: 50%;
-transform: translateX(-50%);
-font-family: ‘DM Mono’, monospace;
-font-size: 0.6rem;
-letter-spacing: 0.2em;
-text-transform: uppercase;
-color: var(–fern);
-display: flex;
-flex-direction: column;
-align-items: center;
-gap: 0.75rem;
-opacity: 0;
-animation: fadeUp 1s 1.5s forwards;
-z-index: 5;
-}
-.scroll-line {
-width: 1px;
-height: 60px;
-background: linear-gradient(to bottom, var(–fern), transparent);
-animation: scrollPulse 2s 2s infinite;
-}
+  .hero-scroll-hint {
+    position: absolute;
+    bottom: 3rem;
+    left: 50%;
+    transform: translateX(-50%);
+    font-family: 'DM Mono', monospace;
+    font-size: 0.6rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--fern);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.75rem;
+    opacity: 0;
+    animation: fadeUp 1s 1.5s forwards;
+    z-index: 5;
+  }
+  .scroll-line {
+    width: 1px;
+    height: 60px;
+    background: linear-gradient(to bottom, var(--fern), transparent);
+    animation: scrollPulse 2s 2s infinite;
+  }
 
-/* SECTION BASE */
-section {
-padding: 7rem 0;
-position: relative;
-}
+  /* SECTION BASE */
+  section {
+    padding: 7rem 0;
+    position: relative;
+  }
 
-.container {
-max-width: 1100px;
-margin: 0 auto;
-padding: 0 3rem;
-}
+  .container {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 3rem;
+  }
 
-.section-label {
-font-family: ‘DM Mono’, monospace;
-font-size: 0.62rem;
-letter-spacing: 0.3em;
-text-transform: uppercase;
-color: var(–bark);
-margin-bottom: 1rem;
-display: flex;
-align-items: center;
-gap: 1rem;
-}
-.section-label::before {
-content: ‘’;
-display: block;
-width: 40px;
-height: 1px;
-background: var(–amber);
-}
+  .section-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.62rem;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--bark);
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+  .section-label::before {
+    content: '';
+    display: block;
+    width: 40px;
+    height: 1px;
+    background: var(--amber);
+  }
 
-.section-title {
-font-family: ‘Playfair Display’, serif;
-font-size: clamp(2.2rem, 4vw, 3.5rem);
-font-weight: 700;
-color: var(–forest);
-line-height: 1.1;
-margin-bottom: 3rem;
-}
-.section-title em {
-font-style: italic;
-color: var(–canopy);
-}
+  .section-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2.2rem, 4vw, 3.5rem);
+    font-weight: 700;
+    color: var(--forest);
+    line-height: 1.1;
+    margin-bottom: 3rem;
+  }
+  .section-title em {
+    font-style: italic;
+    color: var(--canopy);
+  }
 
-/* ABOUT */
-#about { background: var(–parchment); }
+  /* ABOUT */
+  #about { background: var(--parchment); }
 
-.about-grid {
-display: grid;
-grid-template-columns: 1fr 1.6fr;
-gap: 5rem;
-align-items: start;
-}
+  .about-grid {
+    display: grid;
+    grid-template-columns: 1fr 1.6fr;
+    gap: 5rem;
+    align-items: start;
+  }
 
-.about-left {
-position: sticky;
-top: 8rem;
-}
+  .about-left {
+    position: sticky;
+    top: 8rem;
+  }
 
-.about-summary {
-font-size: 1.05rem;
-line-height: 1.8;
-color: #3a3a2e;
-border-left: 2px solid var(–lichen);
-padding-left: 1.5rem;
-font-style: italic;
-}
+  .about-summary {
+    font-size: 1.05rem;
+    line-height: 1.8;
+    color: #1e2818;
+    border-left: 2px solid var(--lichen);
+    padding-left: 1.5rem;
+    font-style: italic;
+  }
 
-.about-stats {
-display: grid;
-grid-template-columns: 1fr 1fr;
-gap: 1.5rem;
-margin-top: 3rem;
-}
-.stat {
-padding: 1.2rem;
-border: 1px solid var(–mist);
-background: rgba(200, 223, 200, 0.1);
-transition: border-color 0.3s, transform 0.3s;
-}
-.stat:hover {
-border-color: var(–lichen);
-transform: translateY(-3px);
-}
-.stat-num {
-font-family: ‘Playfair Display’, serif;
-font-size: 2.2rem;
-font-weight: 900;
-color: var(–canopy);
-line-height: 1;
-}
-.stat-label {
-font-family: ‘DM Mono’, monospace;
-font-size: 0.58rem;
-letter-spacing: 0.15em;
-text-transform: uppercase;
-color: var(–fern);
-margin-top: 0.3rem;
-}
+  .about-stats {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+    margin-top: 3rem;
+  }
+  .stat {
+    padding: 1.2rem;
+    border: 1px solid var(--mist);
+    background: rgba(200, 223, 200, 0.1);
+    transition: border-color 0.3s, transform 0.3s;
+  }
+  .stat:hover {
+    border-color: var(--lichen);
+    transform: translateY(-3px);
+  }
+  .stat-num {
+    font-family: 'Playfair Display', serif;
+    font-size: 2.2rem;
+    font-weight: 900;
+    color: var(--canopy);
+    line-height: 1;
+  }
+  .stat-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.58rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--fern);
+    margin-top: 0.3rem;
+  }
 
-.about-right { padding-top: 0.5rem; }
+  .about-right { padding-top: 0.5rem; }
 
-.about-text p {
-font-size: 0.95rem;
-line-height: 1.9;
-color: #3a3a2e;
-margin-bottom: 1.5rem;
-}
+  .about-text p {
+    font-size: 0.95rem;
+    line-height: 1.9;
+    color: #1e2818;
+    margin-bottom: 1.5rem;
+  }
 
-/* EXPERIENCE */
-#experience { background: var(–forest); color: var(–cream); }
-#experience .section-label { color: var(–lichen); }
-#experience .section-title { color: var(–cream); }
-#experience .section-title em { color: var(–lichen); }
+  /* EXPERIENCE */
+  #experience { background: var(--forest); color: var(--cream); }
+  #experience .section-label { color: var(--lichen); }
+  #experience .section-title { color: var(--cream); }
+  #experience .section-title em { color: var(--lichen); }
 
-.timeline {
-position: relative;
-padding-left: 2rem;
-}
-.timeline::before {
-content: ‘’;
-position: absolute;
-left: 0; top: 0; bottom: 0;
-width: 1px;
-background: linear-gradient(to bottom, var(–canopy), transparent);
-}
+  .timeline {
+    position: relative;
+    padding-left: 2rem;
+  }
+  .timeline::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 1px;
+    background: linear-gradient(to bottom, var(--canopy), transparent);
+  }
 
-.timeline-item {
-position: relative;
-padding: 0 0 3.5rem 2.5rem;
-opacity: 0;
-transform: translateX(-20px);
-transition: opacity 0.6s, transform 0.6s;
-}
-.timeline-item.visible {
-opacity: 1;
-transform: none;
-}
-.timeline-item::before {
-content: ‘’;
-position: absolute;
-left: -2rem;
-top: 0.45rem;
-width: 8px; height: 8px;
-border-radius: 50%;
-background: var(–amber);
-border: 2px solid var(–forest);
-box-shadow: 0 0 0 4px rgba(212, 160, 23, 0.15);
-}
+  .timeline-item {
+    position: relative;
+    padding: 0 0 3.5rem 2.5rem;
+    opacity: 0;
+    transform: translateX(-20px);
+    transition: opacity 0.6s, transform 0.6s;
+  }
+  .timeline-item.visible {
+    opacity: 1;
+    transform: none;
+  }
+  .timeline-item::before {
+    content: '';
+    position: absolute;
+    left: -2rem;
+    top: 0.45rem;
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: var(--amber);
+    border: 2px solid var(--forest);
+    box-shadow: 0 0 0 4px rgba(212, 160, 23, 0.15);
+  }
 
-.tl-date {
-font-family: ‘DM Mono’, monospace;
-font-size: 0.62rem;
-letter-spacing: 0.18em;
-text-transform: uppercase;
-color: var(–lichen);
-margin-bottom: 0.4rem;
-}
-.tl-role {
-font-family: ‘Playfair Display’, serif;
-font-size: 1.3rem;
-font-weight: 700;
-color: var(–cream);
-margin-bottom: 0.2rem;
-}
-.tl-company {
-font-family: ‘DM Mono’, monospace;
-font-size: 0.7rem;
-color: var(–lichen);
-letter-spacing: 0.1em;
-margin-bottom: 0.8rem;
-}
-.tl-desc {
-font-size: 0.88rem;
-line-height: 1.75;
-color: rgba(200, 223, 200, 0.8);
-}
+  .tl-date {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.62rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--lichen);
+    margin-bottom: 0.4rem;
+  }
+  .tl-role {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: var(--cream);
+    margin-bottom: 0.2rem;
+  }
+  .tl-company {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.7rem;
+    color: var(--lichen);
+    letter-spacing: 0.1em;
+    margin-bottom: 0.8rem;
+  }
+  .tl-desc {
+    font-size: 0.88rem;
+    line-height: 1.75;
+    color: rgba(200, 223, 200, 0.95);
+  }
 
-/* SKILLS */
-#skills { background: var(–cream); }
+  /* SKILLS */
+  #skills { background: var(--cream); }
 
-.skills-grid {
-display: grid;
-grid-template-columns: repeat(2, 1fr);
-gap: 1px;
-background: var(–mist);
-border: 1px solid var(–mist);
-}
+  .skills-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1px;
+    background: var(--mist);
+    border: 1px solid var(--mist);
+  }
 
-.skill-cat {
-background: var(–parchment);
-padding: 2.5rem;
-transition: background 0.3s;
-}
-.skill-cat:hover { background: rgba(200, 223, 200, 0.25); }
+  .skill-cat {
+    background: var(--parchment);
+    padding: 2.5rem;
+    transition: background 0.3s;
+  }
+  .skill-cat:hover { background: rgba(200, 223, 200, 0.25); }
 
-.skill-cat-icon {
-font-size: 1.8rem;
-margin-bottom: 1rem;
-display: block;
-}
-.skill-cat-title {
-font-family: ‘DM Mono’, monospace;
-font-size: 0.65rem;
-letter-spacing: 0.2em;
-text-transform: uppercase;
-color: var(–bark);
-margin-bottom: 1rem;
-}
-.skill-tags {
-display: flex;
-flex-wrap: wrap;
-gap: 0.5rem;
-}
-.skill-tag {
-font-family: ‘DM Mono’, monospace;
-font-size: 0.65rem;
-padding: 0.3rem 0.8rem;
-border: 1px solid var(–lichen);
-color: var(–moss);
-letter-spacing: 0.08em;
-transition: all 0.25s;
-}
-.skill-tag:hover {
-background: var(–canopy);
-border-color: var(–canopy);
-color: var(–cream);
-transform: translateY(-2px);
-}
+  .skill-cat-icon {
+    font-size: 1.8rem;
+    margin-bottom: 1rem;
+    display: block;
+  }
+  .skill-cat-title {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--bark);
+    margin-bottom: 1rem;
+  }
+  .skill-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+  .skill-tag {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.65rem;
+    padding: 0.3rem 0.8rem;
+    border: 1px solid var(--lichen);
+    color: var(--moss);
+    letter-spacing: 0.08em;
+    transition: all 0.25s;
+  }
+  .skill-tag:hover {
+    background: var(--canopy);
+    border-color: var(--canopy);
+    color: var(--cream);
+    transform: translateY(-2px);
+  }
 
-/* EDUCATION */
-#education { background: var(–fog); }
+  /* EDUCATION */
+  #education { background: var(--fog); }
 
-.edu-grid {
-display: grid;
-grid-template-columns: repeat(3, 1fr);
-gap: 1.5rem;
-}
+  .edu-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+  }
 
-.edu-card {
-padding: 2rem;
-border-top: 2px solid var(–amber);
-background: var(–parchment);
-transition: transform 0.35s cubic-bezier(.23,1,.32,1), box-shadow 0.35s;
-opacity: 0;
-transform: translateY(25px);
-}
-.edu-card.visible {
-opacity: 1;
-transform: none;
-}
-.edu-card:hover {
-transform: translateY(-6px);
-box-shadow: 0 20px 40px rgba(26, 46, 26, 0.1);
-}
-.edu-year {
-font-family: ‘Playfair Display’, serif;
-font-size: 2rem;
-font-weight: 900;
-color: var(–lichen);
-margin-bottom: 0.5rem;
-}
-.edu-degree {
-font-family: ‘Playfair Display’, serif;
-font-size: 0.95rem;
-font-weight: 700;
-color: var(–forest);
-margin-bottom: 0.4rem;
-line-height: 1.3;
-}
-.edu-school {
-font-family: ‘DM Mono’, monospace;
-font-size: 0.6rem;
-letter-spacing: 0.12em;
-text-transform: uppercase;
-color: var(–fern);
-}
+  .edu-card {
+    padding: 2rem;
+    border-top: 2px solid var(--amber);
+    background: var(--parchment);
+    transition: transform 0.35s cubic-bezier(.23,1,.32,1), box-shadow 0.35s;
+    opacity: 0;
+    transform: translateY(25px);
+  }
+  .edu-card.visible {
+    opacity: 1;
+    transform: none;
+  }
+  .edu-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 20px 40px rgba(26, 46, 26, 0.1);
+  }
+  .edu-year {
+    font-family: 'Playfair Display', serif;
+    font-size: 2rem;
+    font-weight: 900;
+    color: var(--lichen);
+    margin-bottom: 0.5rem;
+  }
+  .edu-degree {
+    font-family: 'Playfair Display', serif;
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--forest);
+    margin-bottom: 0.4rem;
+    line-height: 1.3;
+  }
+  .edu-school {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.6rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--fern);
+  }
 
-/* LANGUAGES */
-.lang-grid {
-display: grid;
-grid-template-columns: repeat(3, 1fr);
-gap: 1rem;
-margin-top: 3rem;
-}
-.lang-item {
-text-align: center;
-padding: 1.5rem;
-border: 1px solid var(–mist);
-position: relative;
-overflow: hidden;
-}
-.lang-item::before {
-content: ‘’;
-position: absolute;
-bottom: 0; left: 0;
-width: 100%;
-height: 3px;
-background: var(–canopy);
-transform: scaleX(0);
-transform-origin: left;
-transition: transform 0.4s cubic-bezier(.23,1,.32,1);
-}
-.lang-item:hover::before { transform: scaleX(1); }
-.lang-name {
-font-family: ‘Playfair Display’, serif;
-font-size: 1.3rem;
-font-weight: 700;
-color: var(–forest);
-}
-.lang-level {
-font-family: ‘DM Mono’, monospace;
-font-size: 0.6rem;
-letter-spacing: 0.18em;
-text-transform: uppercase;
-color: var(–fern);
-margin-top: 0.3rem;
-}
+  /* LANGUAGES */
+  .lang-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+    margin-top: 3rem;
+  }
+  .lang-item {
+    text-align: center;
+    padding: 1.5rem;
+    border: 1px solid var(--mist);
+    position: relative;
+    overflow: hidden;
+  }
+  .lang-item::before {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0;
+    width: 100%;
+    height: 3px;
+    background: var(--canopy);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.4s cubic-bezier(.23,1,.32,1);
+  }
+  .lang-item:hover::before { transform: scaleX(1); }
+  .lang-name {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: var(--forest);
+  }
+  .lang-level {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.6rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--fern);
+    margin-top: 0.3rem;
+  }
 
-/* CONTACT */
-#contact {
-background: var(–moss);
-color: var(–cream);
-text-align: center;
-padding: 6rem 3rem;
-}
-#contact .section-label { color: var(–lichen); justify-content: center; }
-#contact .section-label::before { display: none; }
-#contact .section-title { color: var(–cream); margin-bottom: 1rem; }
+  /* CONTACT */
+  #contact {
+    background: var(--moss);
+    color: var(--cream);
+    text-align: center;
+    padding: 6rem 3rem;
+  }
+  #contact .section-label { color: var(--lichen); justify-content: center; }
+  #contact .section-label::before { display: none; }
+  #contact .section-title { color: var(--cream); margin-bottom: 1rem; }
 
-.contact-sub {
-font-style: italic;
-color: var(–lichen);
-font-size: 1rem;
-margin-bottom: 3rem;
-}
+  .contact-sub {
+    font-style: italic;
+    color: var(--lichen);
+    font-size: 1rem;
+    margin-bottom: 3rem;
+  }
 
-.contact-links {
-display: flex;
-justify-content: center;
-gap: 2rem;
-flex-wrap: wrap;
-}
-.contact-link {
-display: inline-flex;
-align-items: center;
-gap: 0.6rem;
-font-family: ‘DM Mono’, monospace;
-font-size: 0.7rem;
-letter-spacing: 0.15em;
-text-transform: uppercase;
-color: var(–mist);
-text-decoration: none;
-padding: 0.9rem 2rem;
-border: 1px solid rgba(200,223,200,0.3);
-transition: all 0.3s;
-}
-.contact-link:hover {
-background: rgba(200,223,200,0.1);
-border-color: var(–lichen);
-color: var(–cream);
-transform: translateY(-3px);
-}
+  .contact-links {
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+    flex-wrap: wrap;
+  }
+  .contact-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.7rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--mist);
+    text-decoration: none;
+    padding: 0.9rem 2rem;
+    border: 1px solid rgba(200,223,200,0.3);
+    transition: all 0.3s;
+  }
+  .contact-link:hover {
+    background: rgba(200,223,200,0.1);
+    border-color: var(--lichen);
+    color: var(--cream);
+    transform: translateY(-3px);
+  }
 
-/* FOOTER */
-footer {
-background: var(–forest);
-color: var(–fern);
-text-align: center;
-padding: 1.5rem;
-font-family: ‘DM Mono’, monospace;
-font-size: 0.58rem;
-letter-spacing: 0.12em;
-}
+  /* FOOTER */
+  footer {
+    background: var(--forest);
+    color: var(--fern);
+    text-align: center;
+    padding: 1.5rem;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.58rem;
+    letter-spacing: 0.12em;
+  }
 
-/* TREE SVG DECORATION */
-.tree-deco {
-position: absolute;
-right: -2rem;
-bottom: 0;
-width: 35%;
-opacity: 0.07;
-pointer-events: none;
-}
+  /* TREE SVG DECORATION */
+  .tree-deco {
+    position: absolute;
+    right: -2rem;
+    bottom: 0;
+    width: 35%;
+    opacity: 0.07;
+    pointer-events: none;
+  }
 
-/* ANIMATIONS */
-@keyframes fadeUp {
-to { opacity: 1; transform: translateY(0); }
-}
-@keyframes fadeIn {
-to { opacity: 1; }
-}
-@keyframes scrollPulse {
-0%, 100% { opacity: 0.6; transform: scaleY(1); }
-50% { opacity: 1; transform: scaleY(1.1); }
-}
-@keyframes float {
-0%, 100% { transform: translateY(0) rotate(0deg); }
-50% { transform: translateY(-12px) rotate(1deg); }
-}
+  /* ANIMATIONS */
+  @keyframes fadeUp {
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes fadeIn {
+    to { opacity: 1; }
+  }
+  @keyframes scrollPulse {
+    0%, 100% { opacity: 0.6; transform: scaleY(1); }
+    50% { opacity: 1; transform: scaleY(1.1); }
+  }
+  @keyframes float {
+    0%, 100% { transform: translateY(0) rotate(0deg); }
+    50% { transform: translateY(-12px) rotate(1deg); }
+  }
 
-.fade-in-section {
-opacity: 0;
-transform: translateY(30px);
-transition: opacity 0.7s cubic-bezier(.23,1,.32,1), transform 0.7s cubic-bezier(.23,1,.32,1);
-}
-.fade-in-section.visible {
-opacity: 1;
-transform: none;
-}
+  .fade-in-section {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.7s cubic-bezier(.23,1,.32,1), transform 0.7s cubic-bezier(.23,1,.32,1);
+  }
+  .fade-in-section.visible {
+    opacity: 1;
+    transform: none;
+  }
 
-/* MOBILE */
-@media (max-width: 768px) {
-#hero { grid-template-columns: 1fr; }
-.hero-right { display: none; }
-.hero-left { padding: 7rem 1.5rem 4rem; }
-.about-grid { grid-template-columns: 1fr; gap: 2rem; }
-.about-left { position: static; }
-.skills-grid { grid-template-columns: 1fr; }
-.edu-grid { grid-template-columns: 1fr; }
-.lang-grid { grid-template-columns: 1fr; }
-nav { padding: 1rem 1.5rem; }
-.nav-links { display: none; }
-.container { padding: 0 1.5rem; }
-}
+  /* MOBILE */
+  @media (max-width: 768px) {
+    #hero { grid-template-columns: 1fr; }
+    .hero-right { display: none; }
+    .hero-left { padding: 7rem 1.5rem 4rem; }
+    .about-grid { grid-template-columns: 1fr; gap: 2rem; }
+    .about-left { position: static; }
+    .skills-grid { grid-template-columns: 1fr; }
+    .edu-grid { grid-template-columns: 1fr; }
+    .lang-grid { grid-template-columns: 1fr; }
+    nav { padding: 1rem 1.5rem; }
+    .nav-links { display: none; }
+    .container { padding: 0 1.5rem; }
+  }
 </style>
-
 </head>
 <body>
 
 <!-- CURSOR -->
-
 <div class="cursor" id="cursor"></div>
 <div class="cursor-ring" id="cursorRing"></div>
 
 <!-- NAV -->
-
 <nav>
   <div class="nav-logo">Ivan M. Adarme</div>
   <ul class="nav-links">
@@ -725,7 +721,6 @@ nav { padding: 1rem 1.5rem; }
 </nav>
 
 <!-- HERO -->
-
 <section id="hero">
   <div class="hero-left">
     <div class="hero-tag">R.P.F. in Training · #3081</div>
@@ -733,7 +728,7 @@ nav { padding: 1rem 1.5rem; }
     <p class="hero-title">Forestry Engineer & GIS Specialist</p>
     <div class="hero-badge">Ontario · ArcGIS Pro · QGIS · RPAS</div>
     <div class="hero-contacts">
-      <a href="mailto:ivanmauricioadarme@gmail.com">ivanmauricioadarme@gmail.com</a>
+      <a href="/cdn-cgi/l/email-protection#5d342b3c33303c282f343e34323c393c2f30381d3a303c3431733e3230"><span class="__cf_email__" data-cfemail="deb7a8bfb0b3bfabacb7bdb7b1bfbabfacb3bb9eb9b3bfb7b2f0bdb1b3">[email&#160;protected]</span></a>
       <a href="tel:+14379743091">+1 437-974-3091</a>
       <a href="https://linkedin.com/in/ivan-mauricio-adarme-72276616" target="_blank">linkedin.com/in/ivan-mauricio-adarme</a>
     </div>
@@ -750,66 +745,63 @@ nav { padding: 1rem 1.5rem; }
       <ellipse cx="300" cy="400" rx="98" ry="63" fill="none" stroke="#3d6b3d" stroke-width="1.5" opacity="0.22"/>
       <ellipse cx="300" cy="400" rx="58" ry="36" fill="none" stroke="#3d6b3d" stroke-width="2" opacity="0.25"/>
 
-```
-  <!-- Decorative trees (triangles) -->
-  <g opacity="0.4" fill="#2d4a2d">
-    <polygon points="80,600 110,530 140,600"/>
-    <polygon points="88,600 108,558 128,600"/>
-    <polygon points="450,180 480,110 510,180"/>
-    <polygon points="458,180 478,138 498,180"/>
-    <polygon points="160,220 195,145 230,220"/>
-    <polygon points="170,220 192,170 214,220"/>
-    <polygon points="380,650 415,575 450,650"/>
-    <polygon points="390,650 412,600 434,650"/>
-    <polygon points="30,350 58,285 86,350"/>
-    <polygon points="37,350 56,305 75,350"/>
-    <polygon points="510,480 540,415 570,480"/>
-    <polygon points="518,480 537,435 556,480"/>
-  </g>
+      <!-- Decorative trees (triangles) -->
+      <g opacity="0.4" fill="#2d4a2d">
+        <polygon points="80,600 110,530 140,600"/>
+        <polygon points="88,600 108,558 128,600"/>
+        <polygon points="450,180 480,110 510,180"/>
+        <polygon points="458,180 478,138 498,180"/>
+        <polygon points="160,220 195,145 230,220"/>
+        <polygon points="170,220 192,170 214,220"/>
+        <polygon points="380,650 415,575 450,650"/>
+        <polygon points="390,650 412,600 434,650"/>
+        <polygon points="30,350 58,285 86,350"/>
+        <polygon points="37,350 56,305 75,350"/>
+        <polygon points="510,480 540,415 570,480"/>
+        <polygon points="518,480 537,435 556,480"/>
+      </g>
 
-  <!-- GPS cross marker -->
-  <g transform="translate(300,400)" opacity="0.7">
-    <circle cx="0" cy="0" r="18" fill="none" stroke="#d4a017" stroke-width="1.5"/>
-    <line x1="-28" y1="0" x2="28" y2="0" stroke="#d4a017" stroke-width="1"/>
-    <line x1="0" y1="-28" x2="0" y2="28" stroke="#d4a017" stroke-width="1"/>
-    <circle cx="0" cy="0" r="4" fill="#d4a017"/>
-    <text x="24" y="-22" font-family="monospace" font-size="10" fill="#8b6914" letter-spacing="1">GPS</text>
-  </g>
+      <!-- GPS cross marker -->
+      <g transform="translate(300,400)" opacity="0.7">
+        <circle cx="0" cy="0" r="18" fill="none" stroke="#d4a017" stroke-width="1.5"/>
+        <line x1="-28" y1="0" x2="28" y2="0" stroke="#d4a017" stroke-width="1"/>
+        <line x1="0" y1="-28" x2="0" y2="28" stroke="#d4a017" stroke-width="1"/>
+        <circle cx="0" cy="0" r="4" fill="#d4a017"/>
+        <text x="24" y="-22" font-family="monospace" font-size="10" fill="#8b6914" letter-spacing="1">GPS</text>
+      </g>
 
-  <!-- Grid lines -->
-  <g opacity="0.08" stroke="#1a2e1a" stroke-width="0.5">
-    <line x1="0" y1="100" x2="600" y2="100"/>
-    <line x1="0" y1="200" x2="600" y2="200"/>
-    <line x1="0" y1="300" x2="600" y2="300"/>
-    <line x1="0" y1="500" x2="600" y2="500"/>
-    <line x1="0" y1="600" x2="600" y2="600"/>
-    <line x1="0" y1="700" x2="600" y2="700"/>
-    <line x1="100" y1="0" x2="100" y2="800"/>
-    <line x1="200" y1="0" x2="200" y2="800"/>
-    <line x1="400" y1="0" x2="400" y2="800"/>
-    <line x1="500" y1="0" x2="500" y2="800"/>
-  </g>
+      <!-- Grid lines -->
+      <g opacity="0.08" stroke="#1a2e1a" stroke-width="0.5">
+        <line x1="0" y1="100" x2="600" y2="100"/>
+        <line x1="0" y1="200" x2="600" y2="200"/>
+        <line x1="0" y1="300" x2="600" y2="300"/>
+        <line x1="0" y1="500" x2="600" y2="500"/>
+        <line x1="0" y1="600" x2="600" y2="600"/>
+        <line x1="0" y1="700" x2="600" y2="700"/>
+        <line x1="100" y1="0" x2="100" y2="800"/>
+        <line x1="200" y1="0" x2="200" y2="800"/>
+        <line x1="400" y1="0" x2="400" y2="800"/>
+        <line x1="500" y1="0" x2="500" y2="800"/>
+      </g>
 
-  <!-- Scale bar -->
-  <g transform="translate(40, 740)" opacity="0.5">
-    <line x1="0" y1="0" x2="120" y2="0" stroke="#2d4a2d" stroke-width="2"/>
-    <line x1="0" y1="-5" x2="0" y2="5" stroke="#2d4a2d" stroke-width="1.5"/>
-    <line x1="60" y1="-3" x2="60" y2="3" stroke="#2d4a2d" stroke-width="1"/>
-    <line x1="120" y1="-5" x2="120" y2="5" stroke="#2d4a2d" stroke-width="1.5"/>
-    <text x="50" y="16" font-family="monospace" font-size="8" fill="#2d4a2d">500 m</text>
-  </g>
+      <!-- Scale bar -->
+      <g transform="translate(40, 740)" opacity="0.5">
+        <line x1="0" y1="0" x2="120" y2="0" stroke="#2d4a2d" stroke-width="2"/>
+        <line x1="0" y1="-5" x2="0" y2="5" stroke="#2d4a2d" stroke-width="1.5"/>
+        <line x1="60" y1="-3" x2="60" y2="3" stroke="#2d4a2d" stroke-width="1"/>
+        <line x1="120" y1="-5" x2="120" y2="5" stroke="#2d4a2d" stroke-width="1.5"/>
+        <text x="50" y="16" font-family="monospace" font-size="8" fill="#2d4a2d">500 m</text>
+      </g>
 
-  <!-- Compass rose -->
-  <g transform="translate(540, 100)" opacity="0.6">
-    <polygon points="0,-22 5,-8 0,-2 -5,-8" fill="#2d4a2d"/>
-    <polygon points="0,22 5,8 0,2 -5,8" fill="#8ab88a"/>
-    <polygon points="-22,0 -8,5 -2,0 -8,-5" fill="#8ab88a"/>
-    <polygon points="22,0 8,5 2,0 8,-5" fill="#8ab88a"/>
-    <text x="-4" y="-26" font-family="monospace" font-size="10" fill="#1a2e1a" font-weight="bold">N</text>
-  </g>
-</svg>
-```
-
+      <!-- Compass rose -->
+      <g transform="translate(540, 100)" opacity="0.6">
+        <polygon points="0,-22 5,-8 0,-2 -5,-8" fill="#2d4a2d"/>
+        <polygon points="0,22 5,8 0,2 -5,8" fill="#8ab88a"/>
+        <polygon points="-22,0 -8,5 -2,0 -8,-5" fill="#8ab88a"/>
+        <polygon points="22,0 8,5 2,0 8,-5" fill="#8ab88a"/>
+        <text x="-4" y="-26" font-family="monospace" font-size="10" fill="#1a2e1a" font-weight="bold">N</text>
+      </g>
+    </svg>
   </div>
 
   <div class="hero-scroll-hint" style="position:absolute; bottom:2rem; left:calc(25%);">
@@ -819,7 +811,6 @@ nav { padding: 1rem 1.5rem; }
 </section>
 
 <!-- ABOUT -->
-
 <section id="about">
   <div class="container">
     <div class="fade-in-section">
@@ -862,86 +853,81 @@ nav { padding: 1rem 1.5rem; }
 </section>
 
 <!-- EXPERIENCE -->
-
 <section id="experience">
   <div class="container">
     <div class="section-label">02 / Experience</div>
     <h2 class="section-title">Work <em>History</em></h2>
 
-```
-<div class="timeline">
+    <div class="timeline">
 
-  <div class="timeline-item">
-    <div class="tl-date">Oct 2025 — Present</div>
-    <div class="tl-role">Bus Driver</div>
-    <div class="tl-company">Metrolinx · North York, ON</div>
-    <div class="tl-desc">Safe and reliable transportation services with strong attention to detail. Full compliance with Ontario traffic regulations.</div>
-  </div>
+      <div class="timeline-item">
+        <div class="tl-date">Oct 2025 — Present</div>
+        <div class="tl-role">Bus Driver</div>
+        <div class="tl-company">Metrolinx · North York, ON</div>
+        <div class="tl-desc">Safe and reliable transportation services with strong attention to detail. Full compliance with Ontario traffic regulations.</div>
+      </div>
 
-  <div class="timeline-item">
-    <div class="tl-date">Jul 2024 — Apr 2025</div>
-    <div class="tl-role">Transit Operator</div>
-    <div class="tl-company">Miller Transit · Richmond Hill, ON</div>
-    <div class="tl-desc">Daily pre-trip inspections ensuring optimal transit bus performance. Courteous and safe vehicle operation at all times.</div>
-  </div>
+      <div class="timeline-item">
+        <div class="tl-date">Jul 2024 — Apr 2025</div>
+        <div class="tl-role">Transit Operator</div>
+        <div class="tl-company">Miller Transit · Richmond Hill, ON</div>
+        <div class="tl-desc">Daily pre-trip inspections ensuring optimal transit bus performance. Courteous and safe vehicle operation at all times.</div>
+      </div>
 
-  <div class="timeline-item">
-    <div class="tl-date">Sep 2023 — Jun 2024</div>
-    <div class="tl-role">School Bus Driver</div>
-    <div class="tl-company">Wheelchair Accessible Transit · North York, ON</div>
-    <div class="tl-desc">Ensuring student safety and optimal bus performance on daily routes. Pre-trip inspections and responsible service delivery.</div>
-  </div>
+      <div class="timeline-item">
+        <div class="tl-date">Sep 2023 — Jun 2024</div>
+        <div class="tl-role">School Bus Driver</div>
+        <div class="tl-company">Wheelchair Accessible Transit · North York, ON</div>
+        <div class="tl-desc">Ensuring student safety and optimal bus performance on daily routes. Pre-trip inspections and responsible service delivery.</div>
+      </div>
 
-  <div class="timeline-item">
-    <div class="tl-date">Jan 2019 — May 2022</div>
-    <div class="tl-role">Advanced Professional B</div>
-    <div class="tl-company">SGI SAS · Colombia</div>
-    <div class="tl-desc">Implementation of the Environmental Recovery Plan in LISAMA 158. Forest inventories, vegetation characterization in diverse ecosystems, and active participation in reforestation and ecosystem restoration initiatives.</div>
-  </div>
+      <div class="timeline-item">
+        <div class="tl-date">Jan 2019 — May 2022</div>
+        <div class="tl-role">Advanced Professional B</div>
+        <div class="tl-company">SGI SAS · Colombia</div>
+        <div class="tl-desc">Implementation of the Environmental Recovery Plan in LISAMA 158. Forest inventories, vegetation characterization in diverse ecosystems, and active participation in reforestation and ecosystem restoration initiatives.</div>
+      </div>
 
-  <div class="timeline-item">
-    <div class="tl-date">Sep 2018 — Dec 2018</div>
-    <div class="tl-role">Project Professional II</div>
-    <div class="tl-company">INERCO Consulting Colombia</div>
-    <div class="tl-desc">Coordinated field data collection for the Forest Compensation Plan. Authored the Flora chapter — including forest structural analysis and GeoDataBase — for the Environmental Impact Assessment of the Loop 10" gas pipeline (Mariquita–Gualanday, TGI Colombia).</div>
-  </div>
+      <div class="timeline-item">
+        <div class="tl-date">Sep 2018 — Dec 2018</div>
+        <div class="tl-role">Project Professional II</div>
+        <div class="tl-company">INERCO Consulting Colombia</div>
+        <div class="tl-desc">Coordinated field data collection for the Forest Compensation Plan. Authored the Flora chapter — including forest structural analysis and GeoDataBase — for the Environmental Impact Assessment of the Loop 10" gas pipeline (Mariquita–Gualanday, TGI Colombia).</div>
+      </div>
 
-  <div class="timeline-item">
-    <div class="tl-date">Nov 2017 — Jul 2018</div>
-    <div class="tl-role">Support Engineer</div>
-    <div class="tl-company">CONCOL by WSP · Colombia</div>
-    <div class="tl-desc">Authored Environmental and Forest Management Plans. Led field operations and logistics for forest inventories. Maintained structured datasets and performed data entry, validation, and file organization.</div>
-  </div>
+      <div class="timeline-item">
+        <div class="tl-date">Nov 2017 — Jul 2018</div>
+        <div class="tl-role">Support Engineer</div>
+        <div class="tl-company">CONCOL by WSP · Colombia</div>
+        <div class="tl-desc">Authored Environmental and Forest Management Plans. Led field operations and logistics for forest inventories. Maintained structured datasets and performed data entry, validation, and file organization.</div>
+      </div>
 
-  <div class="timeline-item">
-    <div class="tl-date">Aug 2017 — Nov 2017</div>
-    <div class="tl-role">External Consultant</div>
-    <div class="tl-company">ECOLOKYE SAS · Antioquia, Colombia</div>
-    <div class="tl-desc">Resident Forestry Engineer for forestry offsetting and silvicultural management in the El Chocho project, Segovia Municipality. Environmental compliance monitoring and reporting.</div>
-  </div>
+      <div class="timeline-item">
+        <div class="tl-date">Aug 2017 — Nov 2017</div>
+        <div class="tl-role">External Consultant</div>
+        <div class="tl-company">ECOLOKYE SAS · Antioquia, Colombia</div>
+        <div class="tl-desc">Resident Forestry Engineer for forestry offsetting and silvicultural management in the El Chocho project, Segovia Municipality. Environmental compliance monitoring and reporting.</div>
+      </div>
 
-  <div class="timeline-item">
-    <div class="tl-date">Oct 2013 — Jan 2014</div>
-    <div class="tl-role">MEG Monitor</div>
-    <div class="tl-company">United Nations Office on Drugs and Crime (UNODC)</div>
-    <div class="tl-desc">On-field monitoring of illicit crop eradication operations. Prepared and submitted technical compliance reports to the national government.</div>
-  </div>
+      <div class="timeline-item">
+        <div class="tl-date">Oct 2013 — Jan 2014</div>
+        <div class="tl-role">MEG Monitor</div>
+        <div class="tl-company">United Nations Office on Drugs and Crime (UNODC)</div>
+        <div class="tl-desc">On-field monitoring of illicit crop eradication operations. Prepared and submitted technical compliance reports to the national government.</div>
+      </div>
 
-  <div class="timeline-item">
-    <div class="tl-date">Oct 2012 — Aug 2013</div>
-    <div class="tl-role">Forestry Engineer</div>
-    <div class="tl-company">AngelGold Mining Co. SAS · Antioquia, Colombia</div>
-    <div class="tl-desc">Forest inventory and reforestation of "La Honda" river protection areas using native species. Data documentation and guidance for consistent dataset use.</div>
-  </div>
+      <div class="timeline-item">
+        <div class="tl-date">Oct 2012 — Aug 2013</div>
+        <div class="tl-role">Forestry Engineer</div>
+        <div class="tl-company">AngelGold Mining Co. SAS · Antioquia, Colombia</div>
+        <div class="tl-desc">Forest inventory and reforestation of "La Honda" river protection areas using native species. Data documentation and guidance for consistent dataset use.</div>
+      </div>
 
-</div>
-```
-
+    </div>
   </div>
 </section>
 
 <!-- SKILLS -->
-
 <section id="skills">
   <div class="container">
     <div class="fade-in-section">
@@ -997,7 +983,6 @@ nav { padding: 1rem 1.5rem; }
 </section>
 
 <!-- EDUCATION -->
-
 <section id="education">
   <div class="container">
     <div class="fade-in-section">
@@ -1031,35 +1016,31 @@ nav { padding: 1rem 1.5rem; }
         </div>
       </div>
 
-```
-  <div class="lang-grid">
-    <div class="lang-item">
-      <div class="lang-name">Español</div>
-      <div class="lang-level">Native</div>
+      <div class="lang-grid">
+        <div class="lang-item">
+          <div class="lang-name">Español</div>
+          <div class="lang-level">Native</div>
+        </div>
+        <div class="lang-item">
+          <div class="lang-name">English</div>
+          <div class="lang-level">Fluent</div>
+        </div>
+        <div class="lang-item">
+          <div class="lang-name">Français</div>
+          <div class="lang-level">Advanced</div>
+        </div>
+      </div>
     </div>
-    <div class="lang-item">
-      <div class="lang-name">English</div>
-      <div class="lang-level">Fluent</div>
-    </div>
-    <div class="lang-item">
-      <div class="lang-name">Français</div>
-      <div class="lang-level">Advanced</div>
-    </div>
-  </div>
-</div>
-```
-
   </div>
 </section>
 
 <!-- CONTACT -->
-
 <section id="contact">
   <div class="section-label">05 / Contact</div>
   <h2 class="section-title">Get in <em>Touch</em></h2>
   <p class="contact-sub">Open to GIS, forestry, and environmental roles in Ontario</p>
   <div class="contact-links">
-    <a href="mailto:ivanmauricioadarme@gmail.com" class="contact-link">
+    <a href="/cdn-cgi/l/email-protection#9cf5eafdf2f1fde9eef5fff5f3fdf8fdeef1f9dcfbf1fdf5f0b2fff3f1" class="contact-link">
       ✉ Email
     </a>
     <a href="tel:+14379743091" class="contact-link">
@@ -1075,7 +1056,7 @@ nav { padding: 1rem 1.5rem; }
   © 2026 Ivan Mauricio Adarme Cornejo · R.P.F. in Training #3081 · Ontario, Canada
 </footer>
 
-<script>
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
   // CUSTOM CURSOR
   const cursor = document.getElementById('cursor');
   const ring = document.getElementById('cursorRing');
@@ -1120,16 +1101,4 @@ nav { padding: 1rem 1.5rem; }
   // NAV active highlight on scroll
   const sections = document.querySelectorAll('section[id]');
   const navLinks = document.querySelectorAll('.nav-links a');
-  window.addEventListener('scroll', () => {
-    let current = '';
-    sections.forEach(s => {
-      if (window.scrollY >= s.offsetTop - 200) current = s.id;
-    });
-    navLinks.forEach(a => {
-      a.style.color = a.getAttribute('href') === '#' + current ? 'var(--bark)' : '';
-    });
-  }, { passive: true });
-</script>
-
-</body>
-</html>
+  window.addEventListener
