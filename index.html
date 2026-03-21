@@ -1,1265 +1,1135 @@
 <!DOCTYPE html>
+
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Ivan Mauricio Adarme | Forestry Engineer · R.P.F. in Training</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<title>Ivan Mauricio Adarme Cornejo — Forestry & GIS</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=DM+Mono:wght@300;400;500&family=Libre+Baskerville:ital@0;1&display=swap" rel="stylesheet">
 <style>
-* { margin:0; padding:0; box-sizing:border-box; }
-html { scroll-behavior:smooth; }
- 
-:root {
-  --forest:    #1a3a2a;
-  --forest-mid:#2d6645;
-  --forest-light:#4a9664;
-  --sage:      #7aaa8a;
-  --sage-light:#c8ddd0;
-  --cream:     #f4f0e8;
-  --cream-dark:#e8e2d4;
-  --earth:     #8b6914;
-  --earth-light:#d4a843;
-  --bark:      #3d2b1f;
-  --text:      #1c2e22;
-  --text-muted:#5a7060;
-  --white:     #ffffff;
-  --sidebar-w: 300px;
-}
- 
+  :root {
+    --forest: #1a2e1a;
+    --moss: #2d4a2d;
+    --canopy: #3d6b3d;
+    --fern: #5a8a5a;
+    --lichen: #8ab88a;
+    --mist: #c8dfc8;
+    --bark: #8b6914;
+    --amber: #d4a017;
+    --cream: #f5f0e8;
+    --fog: #e8e4dc;
+    --ink: #1a1a14;
+    --parchment: #faf7f0;
+  }
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { scroll-behavior: smooth; }
+
 body {
-  font-family: 'Inter', sans-serif;
-  background: var(--cream);
-  color: var(--text);
-  font-size: 15px;
-  line-height: 1.65;
+background: var(–parchment);
+color: var(–ink);
+font-family: ‘Libre Baskerville’, Georgia, serif;
+overflow-x: hidden;
+cursor: none;
 }
- 
-/* ── SIDEBAR ── */
-.sidebar {
-  position: fixed;
-  top:0; left:0;
-  width: var(--sidebar-w);
-  height: 100vh;
-  background: var(--forest);
-  display: flex;
-  flex-direction: column;
-  padding: 0;
-  overflow-y: auto;
-  z-index: 100;
+
+/* CUSTOM CURSOR */
+.cursor {
+width: 12px; height: 12px;
+background: var(–canopy);
+border-radius: 50%;
+position: fixed;
+top: 0; left: 0;
+pointer-events: none;
+z-index: 9999;
+transition: transform 0.15s ease, background 0.2s;
+mix-blend-mode: multiply;
 }
- 
-.sidebar-top {
-  background: var(--forest-mid);
-  padding: 40px 28px 32px;
-  position: relative;
-  overflow: hidden;
+.cursor-ring {
+width: 36px; height: 36px;
+border: 1.5px solid var(–canopy);
+border-radius: 50%;
+position: fixed;
+top: 0; left: 0;
+pointer-events: none;
+z-index: 9998;
+transition: transform 0.35s cubic-bezier(.23,1,.32,1), opacity 0.2s;
+opacity: 0.6;
 }
- 
-.sidebar-top::after {
-  content: '🌲';
-  position: absolute;
-  right: -10px; bottom: -20px;
-  font-size: 90px;
-  opacity: 0.08;
-  pointer-events: none;
+body:hover .cursor { transform: translate(-50%, -50%); }
+
+/* NOISE OVERLAY */
+body::before {
+content: ‘’;
+position: fixed;
+inset: 0;
+background-image: url(“data:image/svg+xml,%3Csvg viewBox=‘0 0 256 256’ xmlns=‘http://www.w3.org/2000/svg’%3E%3Cfilter id=‘noise’%3E%3CfeTurbulence type=‘fractalNoise’ baseFrequency=‘0.9’ numOctaves=‘4’ stitchTiles=‘stitch’/%3E%3C/filter%3E%3Crect width=‘100%25’ height=‘100%25’ filter=‘url(%23noise)’ opacity=‘0.04’/%3E%3C/svg%3E”);
+pointer-events: none;
+z-index: 1000;
+opacity: 0.4;
 }
- 
-.avatar {
-  width: 88px; height: 88px;
-  border-radius: 50%;
-  background: var(--forest-light);
-  display: flex; align-items:center; justify-content:center;
-  font-family: 'Playfair Display', serif;
-  font-size: 34px;
-  color: var(--cream);
-  margin-bottom: 18px;
-  border: 3px solid var(--earth-light);
-  flex-shrink:0;
+
+/* NAV */
+nav {
+position: fixed;
+top: 0; left: 0; right: 0;
+z-index: 100;
+padding: 1.5rem 3rem;
+display: flex;
+justify-content: space-between;
+align-items: center;
+mix-blend-mode: normal;
+background: linear-gradient(to bottom, rgba(250,247,240,0.95), transparent);
 }
- 
-.sidebar-name {
-  font-family: 'Playfair Display', serif;
-  font-size: 19px;
-  font-weight: 600;
-  color: var(--cream);
-  line-height: 1.25;
-  margin-bottom: 6px;
+.nav-logo {
+font-family: ‘DM Mono’, monospace;
+font-size: 0.7rem;
+letter-spacing: 0.2em;
+color: var(–moss);
+text-transform: uppercase;
 }
- 
-.sidebar-role {
-  font-size: 11px;
-  font-weight: 500;
-  letter-spacing: 0.07em;
-  text-transform: uppercase;
-  color: var(--earth-light);
-  line-height: 1.5;
-  margin-bottom: 6px;
+.nav-links {
+display: flex;
+gap: 2.5rem;
+list-style: none;
 }
- 
-.sidebar-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 5px;
-  font-size: 10px;
-  font-weight: 600;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
-  color: var(--forest);
-  background: var(--earth-light);
-  padding: 3px 10px;
-  border-radius: 20px;
-  margin-top: 6px;
+.nav-links a {
+font-family: ‘DM Mono’, monospace;
+font-size: 0.65rem;
+letter-spacing: 0.18em;
+text-transform: uppercase;
+color: var(–moss);
+text-decoration: none;
+position: relative;
+padding-bottom: 2px;
+transition: color 0.3s;
 }
- 
-.sidebar-inner {
-  padding: 24px 28px;
-  display: flex;
-  flex-direction: column;
-  flex: 1;
+.nav-links a::after {
+content: ‘’;
+position: absolute;
+bottom: 0; left: 0;
+width: 0; height: 1px;
+background: var(–amber);
+transition: width 0.4s cubic-bezier(.23,1,.32,1);
 }
- 
-.lang-toggle {
-  display: flex;
-  gap: 0;
-  border: 1px solid rgba(255,255,255,0.12);
-  border-radius: 4px;
-  overflow: hidden;
-  margin-bottom: 24px;
-  width: fit-content;
-}
- 
-.lang-btn {
-  padding: 5px 14px;
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.06em;
-  cursor: pointer;
-  background: transparent;
-  color: rgba(255,255,255,0.35);
-  border: none;
-  font-family: 'Inter', sans-serif;
-  transition: all 0.2s;
-}
- 
-.lang-btn.active {
-  background: var(--forest-light);
-  color: var(--white);
-}
- 
-nav { display:flex; flex-direction:column; gap:2px; }
- 
-.nav-link {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 9px 12px;
-  border-radius: 6px;
-  text-decoration: none;
-  color: rgba(255,255,255,0.5);
-  font-size: 13px;
-  font-weight: 400;
-  transition: all 0.2s;
-}
- 
-.nav-link:hover, .nav-link.active {
-  background: rgba(255,255,255,0.07);
-  color: var(--cream);
-}
- 
-.nav-icon { font-size: 15px; width: 20px; text-align:center; }
- 
-.sidebar-contact {
-  margin-top: auto;
-  padding-top: 24px;
-  border-top: 1px solid rgba(255,255,255,0.08);
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
- 
-.contact-row {
-  font-size: 12px;
-  color: rgba(255,255,255,0.45);
-  display: flex;
-  align-items: flex-start;
-  gap: 7px;
-  line-height: 1.4;
-}
- 
-.contact-row a { color: var(--sage); text-decoration: none; font-size:12px; }
-.sidebar-footer {
-  padding: 14px 28px;
-  font-size: 11px;
-  color: rgba(255,255,255,0.2);
-  border-top: 1px solid rgba(255,255,255,0.06);
-}
- 
-/* ── MAIN ── */
-.main {
-  margin-left: var(--sidebar-w);
-  min-height: 100vh;
-}
- 
+.nav-links a:hover { color: var(–forest); }
+.nav-links a:hover::after { width: 100%; }
+
 /* HERO */
-.hero {
-  background: var(--forest);
-  padding: 70px 64px 60px;
-  position: relative;
-  overflow: hidden;
-  min-height: 320px;
-  display: flex;
-  align-items: flex-end;
+#hero {
+min-height: 100vh;
+display: grid;
+grid-template-columns: 1fr 1fr;
+position: relative;
+overflow: hidden;
 }
- 
-.hero-bg {
-  position: absolute;
-  inset: 0;
-  background:
-    linear-gradient(135deg, rgba(26,58,42,0.97) 0%, rgba(45,102,69,0.85) 100%);
-  z-index: 0;
+
+.hero-left {
+display: flex;
+flex-direction: column;
+justify-content: flex-end;
+padding: 8rem 4rem 6rem;
+position: relative;
+z-index: 2;
 }
- 
-.hero-trees {
-  position: absolute;
-  right: 0; bottom: 0;
-  font-size: 180px;
-  line-height: 1;
-  opacity: 0.06;
-  pointer-events: none;
-  letter-spacing: -20px;
-  z-index: 1;
+
+.hero-tag {
+font-family: ‘DM Mono’, monospace;
+font-size: 0.65rem;
+letter-spacing: 0.25em;
+text-transform: uppercase;
+color: var(–bark);
+margin-bottom: 1.5rem;
+opacity: 0;
+transform: translateY(20px);
+animation: fadeUp 0.8s 0.3s forwards;
 }
- 
-.hero-content { position: relative; z-index: 2; max-width: 640px; }
- 
-.hero-eyebrow {
-  font-size: 11px;
-  font-weight: 600;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: var(--earth-light);
-  margin-bottom: 14px;
-  display: flex;
-  align-items: center;
-  gap: 10px;
+
+.hero-name {
+font-family: ‘Playfair Display’, serif;
+font-size: clamp(3.5rem, 6vw, 6rem);
+font-weight: 900;
+line-height: 1;
+color: var(–forest);
+opacity: 0;
+transform: translateY(30px);
+animation: fadeUp 0.9s 0.5s forwards;
+letter-spacing: -0.02em;
 }
- 
-.hero-eyebrow::before {
-  content:'';
-  width:20px; height:1px;
-  background: var(--earth-light);
-  display:inline-block;
+
+.hero-name em {
+font-style: italic;
+color: var(–canopy);
 }
- 
-.hero h1 {
-  font-family: 'Playfair Display', serif;
-  font-size: clamp(30px, 4vw, 48px);
-  font-weight: 600;
-  color: var(--cream);
-  line-height: 1.1;
-  margin-bottom: 18px;
-  letter-spacing: -0.01em;
+
+.hero-title {
+font-family: ‘Playfair Display’, serif;
+font-size: clamp(1rem, 1.5vw, 1.4rem);
+font-style: italic;
+color: var(–fern);
+margin-top: 1.5rem;
+opacity: 0;
+transform: translateY(20px);
+animation: fadeUp 0.8s 0.7s forwards;
 }
- 
-.hero h1 em {
-  font-style: italic;
-  color: var(--sage);
+
+.hero-badge {
+display: inline-block;
+margin-top: 2rem;
+padding: 0.5rem 1.2rem;
+border: 1px solid var(–amber);
+font-family: ‘DM Mono’, monospace;
+font-size: 0.65rem;
+letter-spacing: 0.15em;
+text-transform: uppercase;
+color: var(–bark);
+opacity: 0;
+animation: fadeUp 0.8s 0.9s forwards;
+width: fit-content;
 }
- 
-.hero-desc {
-  font-size: 15px;
-  color: rgba(255,255,255,0.55);
-  line-height: 1.75;
-  margin-bottom: 28px;
-  max-width: 560px;
+
+.hero-contacts {
+display: flex;
+flex-direction: column;
+gap: 0.5rem;
+margin-top: 3rem;
+opacity: 0;
+animation: fadeUp 0.8s 1.1s forwards;
 }
- 
-.hero-pills {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
+.hero-contacts a {
+font-family: ‘DM Mono’, monospace;
+font-size: 0.65rem;
+letter-spacing: 0.1em;
+color: var(–moss);
+text-decoration: none;
+transition: color 0.3s;
 }
- 
-.hero-pill {
-  font-size: 11.5px;
-  font-weight: 500;
-  padding: 5px 13px;
-  border-radius: 20px;
-  border: 1px solid rgba(255,255,255,0.12);
-  color: rgba(255,255,255,0.5);
+.hero-contacts a:hover { color: var(–bark); }
+
+.hero-right {
+position: relative;
+overflow: hidden;
 }
- 
-.hero-pill.green {
-  border-color: rgba(74,150,100,0.5);
-  color: var(--sage);
-  background: rgba(74,150,100,0.08);
+
+/* SVG forest map art */
+.hero-map {
+position: absolute;
+inset: 0;
+width: 100%;
+height: 100%;
+opacity: 0;
+animation: fadeIn 1.5s 0.2s forwards;
 }
- 
-/* ── SECTIONS ── */
-section { padding: 60px 64px 0; }
- 
-.sec-label {
-  font-size: 10.5px;
-  font-weight: 600;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: var(--forest-light);
-  margin-bottom: 10px;
-  display: flex;
-  align-items: center;
-  gap: 10px;
+
+/* Contour lines background */
+.hero-right::before {
+content: ‘’;
+position: absolute;
+inset: 0;
+background:
+repeating-linear-gradient(
+0deg,
+transparent,
+transparent 38px,
+rgba(45, 74, 45, 0.08) 38px,
+rgba(45, 74, 45, 0.08) 39px
+),
+repeating-linear-gradient(
+90deg,
+transparent,
+transparent 58px,
+rgba(45, 74, 45, 0.05) 58px,
+rgba(45, 74, 45, 0.05) 59px
+);
+z-index: 1;
 }
- 
-.sec-label::before {
-  content:'';
-  width:20px; height:1px;
-  background: var(--forest-light);
+
+.hero-right-bg {
+position: absolute;
+inset: 0;
+background: linear-gradient(135deg, var(–mist) 0%, var(–fog) 60%, var(–cream) 100%);
 }
- 
-.sec-title {
-  font-family: 'Playfair Display', serif;
-  font-size: clamp(24px, 3vw, 34px);
-  font-weight: 600;
-  color: var(--forest);
-  margin-bottom: 40px;
-  line-height: 1.15;
+
+.hero-scroll-hint {
+position: absolute;
+bottom: 3rem;
+left: 50%;
+transform: translateX(-50%);
+font-family: ‘DM Mono’, monospace;
+font-size: 0.6rem;
+letter-spacing: 0.2em;
+text-transform: uppercase;
+color: var(–fern);
+display: flex;
+flex-direction: column;
+align-items: center;
+gap: 0.75rem;
+opacity: 0;
+animation: fadeUp 1s 1.5s forwards;
+z-index: 5;
 }
- 
-.sec-title .sub {
-  display:block;
-  font-size: 0.5em;
-  font-weight: 400;
-  font-style: italic;
-  color: var(--text-muted);
-  margin-top: 4px;
-  font-family: 'Playfair Display', serif;
+.scroll-line {
+width: 1px;
+height: 60px;
+background: linear-gradient(to bottom, var(–fern), transparent);
+animation: scrollPulse 2s 2s infinite;
 }
- 
-/* EXPERIENCE TIMELINE */
+
+/* SECTION BASE */
+section {
+padding: 7rem 0;
+position: relative;
+}
+
+.container {
+max-width: 1100px;
+margin: 0 auto;
+padding: 0 3rem;
+}
+
+.section-label {
+font-family: ‘DM Mono’, monospace;
+font-size: 0.62rem;
+letter-spacing: 0.3em;
+text-transform: uppercase;
+color: var(–bark);
+margin-bottom: 1rem;
+display: flex;
+align-items: center;
+gap: 1rem;
+}
+.section-label::before {
+content: ‘’;
+display: block;
+width: 40px;
+height: 1px;
+background: var(–amber);
+}
+
+.section-title {
+font-family: ‘Playfair Display’, serif;
+font-size: clamp(2.2rem, 4vw, 3.5rem);
+font-weight: 700;
+color: var(–forest);
+line-height: 1.1;
+margin-bottom: 3rem;
+}
+.section-title em {
+font-style: italic;
+color: var(–canopy);
+}
+
+/* ABOUT */
+#about { background: var(–parchment); }
+
+.about-grid {
+display: grid;
+grid-template-columns: 1fr 1.6fr;
+gap: 5rem;
+align-items: start;
+}
+
+.about-left {
+position: sticky;
+top: 8rem;
+}
+
+.about-summary {
+font-size: 1.05rem;
+line-height: 1.8;
+color: #3a3a2e;
+border-left: 2px solid var(–lichen);
+padding-left: 1.5rem;
+font-style: italic;
+}
+
+.about-stats {
+display: grid;
+grid-template-columns: 1fr 1fr;
+gap: 1.5rem;
+margin-top: 3rem;
+}
+.stat {
+padding: 1.2rem;
+border: 1px solid var(–mist);
+background: rgba(200, 223, 200, 0.1);
+transition: border-color 0.3s, transform 0.3s;
+}
+.stat:hover {
+border-color: var(–lichen);
+transform: translateY(-3px);
+}
+.stat-num {
+font-family: ‘Playfair Display’, serif;
+font-size: 2.2rem;
+font-weight: 900;
+color: var(–canopy);
+line-height: 1;
+}
+.stat-label {
+font-family: ‘DM Mono’, monospace;
+font-size: 0.58rem;
+letter-spacing: 0.15em;
+text-transform: uppercase;
+color: var(–fern);
+margin-top: 0.3rem;
+}
+
+.about-right { padding-top: 0.5rem; }
+
+.about-text p {
+font-size: 0.95rem;
+line-height: 1.9;
+color: #3a3a2e;
+margin-bottom: 1.5rem;
+}
+
+/* EXPERIENCE */
+#experience { background: var(–forest); color: var(–cream); }
+#experience .section-label { color: var(–lichen); }
+#experience .section-title { color: var(–cream); }
+#experience .section-title em { color: var(–lichen); }
+
 .timeline {
-  display: flex;
-  flex-direction: column;
-  gap: 0;
-  position: relative;
+position: relative;
+padding-left: 2rem;
 }
- 
 .timeline::before {
-  content:'';
-  position: absolute;
-  left: 0; top:8px; bottom:8px;
-  width: 1px;
-  background: var(--sage-light);
+content: ‘’;
+position: absolute;
+left: 0; top: 0; bottom: 0;
+width: 1px;
+background: linear-gradient(to bottom, var(–canopy), transparent);
 }
- 
-.tl-item {
-  display: grid;
-  grid-template-columns: 180px 1fr;
-  gap: 32px;
-  padding: 32px 0 32px 0;
-  border-bottom: 1px solid var(--cream-dark);
-  position: relative;
+
+.timeline-item {
+position: relative;
+padding: 0 0 3.5rem 2.5rem;
+opacity: 0;
+transform: translateX(-20px);
+transition: opacity 0.6s, transform 0.6s;
 }
- 
-.tl-item:last-child { border-bottom: none; }
- 
-.tl-dot {
-  position: absolute;
-  left: -5px; top: 38px;
-  width: 10px; height: 10px;
-  border-radius: 50%;
-  background: var(--forest-light);
-  border: 2px solid var(--cream);
-  z-index: 1;
+.timeline-item.visible {
+opacity: 1;
+transform: none;
 }
- 
-.tl-meta {
-  padding-left: 20px;
-  padding-top: 2px;
+.timeline-item::before {
+content: ‘’;
+position: absolute;
+left: -2rem;
+top: 0.45rem;
+width: 8px; height: 8px;
+border-radius: 50%;
+background: var(–amber);
+border: 2px solid var(–forest);
+box-shadow: 0 0 0 4px rgba(212, 160, 23, 0.15);
 }
- 
-.tl-company {
-  font-size: 11.5px;
-  font-weight: 700;
-  letter-spacing: 0.04em;
-  color: var(--forest-mid);
-  text-transform: uppercase;
-  margin-bottom: 4px;
-}
- 
+
 .tl-date {
-  font-size: 11.5px;
-  color: var(--text-muted);
-  line-height: 1.5;
-  font-weight: 400;
+font-family: ‘DM Mono’, monospace;
+font-size: 0.62rem;
+letter-spacing: 0.18em;
+text-transform: uppercase;
+color: var(–lichen);
+margin-bottom: 0.4rem;
 }
- 
-.tl-location {
-  font-size: 11px;
-  color: var(--sage);
-  margin-top: 4px;
-}
- 
 .tl-role {
-  font-family: 'Playfair Display', serif;
-  font-size: 18px;
-  font-weight: 600;
-  color: var(--forest);
-  margin-bottom: 10px;
-  line-height: 1.3;
+font-family: ‘Playfair Display’, serif;
+font-size: 1.3rem;
+font-weight: 700;
+color: var(–cream);
+margin-bottom: 0.2rem;
 }
- 
+.tl-company {
+font-family: ‘DM Mono’, monospace;
+font-size: 0.7rem;
+color: var(–lichen);
+letter-spacing: 0.1em;
+margin-bottom: 0.8rem;
+}
 .tl-desc {
-  font-size: 13.5px;
-  color: var(--text-muted);
-  line-height: 1.75;
+font-size: 0.88rem;
+line-height: 1.75;
+color: rgba(200, 223, 200, 0.8);
 }
- 
-.tl-tags {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-  margin-top: 12px;
-}
- 
-.tag {
-  font-size: 11px;
-  font-weight: 500;
-  padding: 3px 10px;
-  border-radius: 20px;
-  background: var(--sage-light);
-  color: var(--forest-mid);
-}
- 
-.tag.earth {
-  background: #f0e4c4;
-  color: var(--earth);
-}
- 
-/* EDUCATION GRID */
-.edu-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-  gap: 16px;
-}
- 
-.edu-card {
-  background: var(--white);
-  border: 1px solid var(--cream-dark);
-  border-radius: 10px;
-  padding: 22px 24px;
-  border-top: 3px solid var(--forest-light);
-  transition: box-shadow 0.2s;
-}
- 
-.edu-card:hover { box-shadow: 0 4px 16px rgba(26,58,42,0.08); }
- 
-.edu-year {
-  font-size: 11px;
-  font-weight: 600;
-  letter-spacing: 0.06em;
-  color: var(--earth);
-  margin-bottom: 8px;
-  text-transform: uppercase;
-}
- 
-.edu-degree {
-  font-family: 'Playfair Display', serif;
-  font-size: 15px;
-  font-weight: 600;
-  color: var(--forest);
-  line-height: 1.3;
-  margin-bottom: 5px;
-}
- 
-.edu-inst {
-  font-size: 12.5px;
-  color: var(--text-muted);
-}
- 
-/* CERTS */
-.cert-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 14px;
-}
- 
-.cert-card {
-  background: var(--white);
-  border: 1px solid var(--cream-dark);
-  border-radius: 8px;
-  padding: 16px 18px;
-  display: flex;
-  gap: 12px;
-  align-items: flex-start;
-}
- 
-.cert-icon {
-  width: 36px; height: 36px;
-  border-radius: 8px;
-  background: var(--sage-light);
-  display: flex; align-items:center; justify-content:center;
-  font-size: 17px;
-  flex-shrink:0;
-}
- 
-.cert-body {}
-.cert-name {
-  font-size: 13px;
-  font-weight: 600;
-  color: var(--forest);
-  line-height: 1.3;
-  margin-bottom: 3px;
-}
-.cert-issuer {
-  font-size: 11.5px;
-  color: var(--text-muted);
-}
- 
+
 /* SKILLS */
+#skills { background: var(–cream); }
+
 .skills-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
-  gap: 16px;
+display: grid;
+grid-template-columns: repeat(2, 1fr);
+gap: 1px;
+background: var(–mist);
+border: 1px solid var(–mist);
 }
- 
-.skill-card {
-  background: var(--white);
-  border: 1px solid var(--cream-dark);
-  border-radius: 10px;
-  padding: 20px 22px;
-}
- 
+
 .skill-cat {
-  font-size: 10.5px;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--forest-light);
-  margin-bottom: 14px;
-  padding-bottom: 10px;
-  border-bottom: 1px solid var(--cream-dark);
+background: var(–parchment);
+padding: 2.5rem;
+transition: background 0.3s;
 }
- 
-.skill-list {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
+.skill-cat:hover { background: rgba(200, 223, 200, 0.25); }
+
+.skill-cat-icon {
+font-size: 1.8rem;
+margin-bottom: 1rem;
+display: block;
 }
- 
-.skill-item {
-  font-size: 13px;
-  color: var(--text-muted);
-  display: flex;
-  align-items: flex-start;
-  gap: 8px;
+.skill-cat-title {
+font-family: ‘DM Mono’, monospace;
+font-size: 0.65rem;
+letter-spacing: 0.2em;
+text-transform: uppercase;
+color: var(–bark);
+margin-bottom: 1rem;
 }
- 
-.skill-item::before {
-  content:'';
-  width:4px; height:4px;
-  border-radius:50%;
-  background: var(--earth-light);
-  flex-shrink:0;
-  margin-top:6px;
+.skill-tags {
+display: flex;
+flex-wrap: wrap;
+gap: 0.5rem;
 }
- 
-/* RPF HIGHLIGHT */
-.rpf-banner {
-  background: var(--forest);
-  border-radius: 12px;
-  padding: 28px 32px;
-  display: flex;
-  align-items: center;
-  gap: 20px;
-  margin-bottom: 40px;
+.skill-tag {
+font-family: ‘DM Mono’, monospace;
+font-size: 0.65rem;
+padding: 0.3rem 0.8rem;
+border: 1px solid var(–lichen);
+color: var(–moss);
+letter-spacing: 0.08em;
+transition: all 0.25s;
 }
- 
-.rpf-icon {
-  font-size: 36px;
-  flex-shrink: 0;
+.skill-tag:hover {
+background: var(–canopy);
+border-color: var(–canopy);
+color: var(–cream);
+transform: translateY(-2px);
 }
- 
-.rpf-text {}
-.rpf-label {
-  font-size: 10px;
-  font-weight: 700;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: var(--earth-light);
-  margin-bottom: 4px;
+
+/* EDUCATION */
+#education { background: var(–fog); }
+
+.edu-grid {
+display: grid;
+grid-template-columns: repeat(3, 1fr);
+gap: 1.5rem;
 }
-.rpf-title {
-  font-family: 'Playfair Display', serif;
-  font-size: 18px;
-  font-weight: 600;
-  color: var(--cream);
-  margin-bottom: 4px;
+
+.edu-card {
+padding: 2rem;
+border-top: 2px solid var(–amber);
+background: var(–parchment);
+transition: transform 0.35s cubic-bezier(.23,1,.32,1), box-shadow 0.35s;
+opacity: 0;
+transform: translateY(25px);
 }
-.rpf-desc {
-  font-size: 13px;
-  color: var(--sage);
+.edu-card.visible {
+opacity: 1;
+transform: none;
 }
- 
-/* LANG LEVELS */
-.lang-bars {
-  display: flex;
-  flex-direction: column;
-  gap: 14px;
+.edu-card:hover {
+transform: translateY(-6px);
+box-shadow: 0 20px 40px rgba(26, 46, 26, 0.1);
 }
- 
-.lang-row {
-  display: flex;
-  align-items: center;
-  gap: 14px;
+.edu-year {
+font-family: ‘Playfair Display’, serif;
+font-size: 2rem;
+font-weight: 900;
+color: var(–lichen);
+margin-bottom: 0.5rem;
 }
- 
+.edu-degree {
+font-family: ‘Playfair Display’, serif;
+font-size: 0.95rem;
+font-weight: 700;
+color: var(–forest);
+margin-bottom: 0.4rem;
+line-height: 1.3;
+}
+.edu-school {
+font-family: ‘DM Mono’, monospace;
+font-size: 0.6rem;
+letter-spacing: 0.12em;
+text-transform: uppercase;
+color: var(–fern);
+}
+
+/* LANGUAGES */
+.lang-grid {
+display: grid;
+grid-template-columns: repeat(3, 1fr);
+gap: 1rem;
+margin-top: 3rem;
+}
+.lang-item {
+text-align: center;
+padding: 1.5rem;
+border: 1px solid var(–mist);
+position: relative;
+overflow: hidden;
+}
+.lang-item::before {
+content: ‘’;
+position: absolute;
+bottom: 0; left: 0;
+width: 100%;
+height: 3px;
+background: var(–canopy);
+transform: scaleX(0);
+transform-origin: left;
+transition: transform 0.4s cubic-bezier(.23,1,.32,1);
+}
+.lang-item:hover::before { transform: scaleX(1); }
 .lang-name {
-  font-size: 13px;
-  font-weight: 500;
-  color: var(--text);
-  width: 100px;
-  flex-shrink:0;
+font-family: ‘Playfair Display’, serif;
+font-size: 1.3rem;
+font-weight: 700;
+color: var(–forest);
 }
- 
-.lang-bar-bg {
-  flex:1;
-  height: 5px;
-  border-radius: 3px;
-  background: var(--cream-dark);
-  overflow: hidden;
-}
- 
-.lang-bar-fill {
-  height: 100%;
-  border-radius: 3px;
-  background: var(--forest-light);
-}
- 
 .lang-level {
-  font-size: 11px;
-  color: var(--text-muted);
-  width: 70px;
-  text-align: right;
-  flex-shrink:0;
+font-family: ‘DM Mono’, monospace;
+font-size: 0.6rem;
+letter-spacing: 0.18em;
+text-transform: uppercase;
+color: var(–fern);
+margin-top: 0.3rem;
 }
- 
-/* CONTACT SECTION */
+
+/* CONTACT */
 #contact {
-  padding-bottom: 80px;
+background: var(–moss);
+color: var(–cream);
+text-align: center;
+padding: 6rem 3rem;
 }
- 
-.contact-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 40px;
+#contact .section-label { color: var(–lichen); justify-content: center; }
+#contact .section-label::before { display: none; }
+#contact .section-title { color: var(–cream); margin-bottom: 1rem; }
+
+.contact-sub {
+font-style: italic;
+color: var(–lichen);
+font-size: 1rem;
+margin-bottom: 3rem;
 }
- 
-.contact-block-title {
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.07em;
-  text-transform: uppercase;
-  color: var(--forest-light);
-  margin-bottom: 16px;
+
+.contact-links {
+display: flex;
+justify-content: center;
+gap: 2rem;
+flex-wrap: wrap;
 }
- 
-.contact-item {
-  display: flex;
-  flex-direction: column;
-  gap: 3px;
-  margin-bottom: 18px;
+.contact-link {
+display: inline-flex;
+align-items: center;
+gap: 0.6rem;
+font-family: ‘DM Mono’, monospace;
+font-size: 0.7rem;
+letter-spacing: 0.15em;
+text-transform: uppercase;
+color: var(–mist);
+text-decoration: none;
+padding: 0.9rem 2rem;
+border: 1px solid rgba(200,223,200,0.3);
+transition: all 0.3s;
 }
- 
-.contact-item-label {
-  font-size: 11px;
-  font-weight: 600;
-  color: var(--text-muted);
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
+.contact-link:hover {
+background: rgba(200,223,200,0.1);
+border-color: var(–lichen);
+color: var(–cream);
+transform: translateY(-3px);
 }
- 
-.contact-item-value {
-  font-size: 15px;
-  font-weight: 500;
-  color: var(--forest);
+
+/* FOOTER */
+footer {
+background: var(–forest);
+color: var(–fern);
+text-align: center;
+padding: 1.5rem;
+font-family: ‘DM Mono’, monospace;
+font-size: 0.58rem;
+letter-spacing: 0.12em;
 }
- 
-.contact-item-value a {
-  color: var(--forest-mid);
-  text-decoration: none;
+
+/* TREE SVG DECORATION */
+.tree-deco {
+position: absolute;
+right: -2rem;
+bottom: 0;
+width: 35%;
+opacity: 0.07;
+pointer-events: none;
 }
- 
-/* DIVIDER */
-.section-divider {
-  height: 1px;
-  background: var(--cream-dark);
-  margin: 0 64px;
+
+/* ANIMATIONS */
+@keyframes fadeUp {
+to { opacity: 1; transform: translateY(0); }
 }
- 
-/* HIDDEN */
-.en-t { display: none; }
-.es-t { display: block; }
-span.es-t { display: inline; }
-span.en-t { display: none; }
- 
-@media (max-width: 860px) {
-  :root { --sidebar-w: 0px; }
-  .sidebar { display: none; }
-  .main { margin-left: 0; }
-  section, .hero { padding-left: 24px; padding-right: 24px; }
-  .tl-item { grid-template-columns: 1fr; gap: 8px; }
-  .timeline::before { display: none; }
-  .tl-dot { display: none; }
-  .tl-meta { padding-left: 0; }
-  .contact-grid { grid-template-columns: 1fr; }
+@keyframes fadeIn {
+to { opacity: 1; }
+}
+@keyframes scrollPulse {
+0%, 100% { opacity: 0.6; transform: scaleY(1); }
+50% { opacity: 1; transform: scaleY(1.1); }
+}
+@keyframes float {
+0%, 100% { transform: translateY(0) rotate(0deg); }
+50% { transform: translateY(-12px) rotate(1deg); }
+}
+
+.fade-in-section {
+opacity: 0;
+transform: translateY(30px);
+transition: opacity 0.7s cubic-bezier(.23,1,.32,1), transform 0.7s cubic-bezier(.23,1,.32,1);
+}
+.fade-in-section.visible {
+opacity: 1;
+transform: none;
+}
+
+/* MOBILE */
+@media (max-width: 768px) {
+#hero { grid-template-columns: 1fr; }
+.hero-right { display: none; }
+.hero-left { padding: 7rem 1.5rem 4rem; }
+.about-grid { grid-template-columns: 1fr; gap: 2rem; }
+.about-left { position: static; }
+.skills-grid { grid-template-columns: 1fr; }
+.edu-grid { grid-template-columns: 1fr; }
+.lang-grid { grid-template-columns: 1fr; }
+nav { padding: 1rem 1.5rem; }
+.nav-links { display: none; }
+.container { padding: 0 1.5rem; }
 }
 </style>
+
 </head>
 <body>
- 
-<!-- SIDEBAR -->
-<aside class="sidebar">
-  <div class="sidebar-top">
-    <img class="avatar" src="img/1V4N_profile.jpg" alt="Ivan Mauricio Adarme Profile Photo">
-    <div class="sidebar-name">Ivan Mauricio Adarme</div>
-    <div class="sidebar-role">Forestry Engineer<br>R.P.F. in Training · OPFA</div>
-    <div class="sidebar-badge">🌿 Ontario Forest Professional</div>
-  </div>
- 
-  <div class="sidebar-inner">
-    <div class="lang-toggle">
-      <button class="lang-btn active" onclick="setLang('en')" id="btn-en">EN</button>
-      <button class="lang-btn" onclick="setLang('es')" id="btn-es">ES</button>
-    </div>
- 
-    <nav>
-      <a class="nav-link active" href="#experience"><span class="nav-icon">🌲</span>
-        <span class="en-t">Experience</span><span class="es-t">Experiencia</span></a>
-      <a class="nav-link" href="#education"><span class="nav-icon">🎓</span>
-        <span class="en-t">Education</span><span class="es-t">Educación</span></a>
-      <a class="nav-link" href="#certifications"><span class="nav-icon">📜</span>
-        <span class="en-t">Certifications</span><span class="es-t">Certificaciones</span></a>
-      <a class="nav-link" href="#skills"><span class="nav-icon">🛠</span>
-        <span class="en-t">Skills & Tech</span><span class="es-t">Habilidades</span></a>
-      <a class="nav-link" href="#contact"><span class="nav-icon">📬</span>
-        <span class="en-t">Contact</span><span class="es-t">Contacto</span></a>
-    </nav>
- 
-    <div class="sidebar-contact">
-      <div class="contact-row">📍 North York, Ontario, Canada</div>
-      <div class="contact-row">🇨🇴
-        <span class="en-t">Originally from Colombia</span>
-        <span class="es-t">Originario de Colombia</span>
-      </div>
-      <div class="contact-row">
-        <a href="https://linkedin.com/in/ivan-mauricio-adarme-72276616" target="_blank">linkedin.com/in/ivan-mauricio-adarme</a>
-      </div>
+
+<!-- CURSOR -->
+
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+
+<!-- NAV -->
+
+<nav>
+  <div class="nav-logo">Ivan M. Adarme</div>
+  <ul class="nav-links">
+    <li><a href="#about">About</a></li>
+    <li><a href="#experience">Experience</a></li>
+    <li><a href="#skills">Skills</a></li>
+    <li><a href="#education">Education</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+
+<section id="hero">
+  <div class="hero-left">
+    <div class="hero-tag">R.P.F. in Training · #3081</div>
+    <h1 class="hero-name">Ivan<br><em>Mauricio</em><br>Adarme</h1>
+    <p class="hero-title">Forestry Engineer & GIS Specialist</p>
+    <div class="hero-badge">Ontario · ArcGIS Pro · QGIS · RPAS</div>
+    <div class="hero-contacts">
+      <a href="mailto:ivanmauricioadarme@gmail.com">ivanmauricioadarme@gmail.com</a>
+      <a href="tel:+14379743091">+1 437-974-3091</a>
+      <a href="https://linkedin.com/in/ivan-mauricio-adarme-72276616" target="_blank">linkedin.com/in/ivan-mauricio-adarme</a>
     </div>
   </div>
- 
-  <div class="sidebar-footer">© 2026 Ivan Mauricio Adarme</div>
-</aside>
- 
-<!-- MAIN -->
-<main class="main">
- 
-  <!-- HERO -->
-  <div class="hero" id="top">
-    <div class="hero-bg"></div>
-    <div class="hero-trees">🌲🌲🌲</div>
-    <div class="hero-content">
-      <div class="hero-eyebrow">
-        <span class="en-t">Forestry Engineer · Curriculum Vitae</span>
-        <span class="es-t">Ingeniero Forestal · Curriculum Vitae</span>
-      </div>
-      <h1>
-        <span class="en-t">Forest science,<br><em>field expertise,</em><br>digital tools.</span>
-        <span class="es-t">Ciencia forestal,<br><em>experiencia de campo,</em><br>herramientas digitales.</span>
-      </h1>
-      <p class="hero-desc en-t">Forestry Engineer with 10+ years of experience in environmental impact assessment, biodiversity compensation and forest management across Colombia. Now based in Canada, integrating GIS, LiDAR, drone surveying and AI tools into modern forest operations.</p>
-      <p class="hero-desc es-t">Ingeniero Forestal con más de 10 años de experiencia en evaluación de impacto ambiental, compensación de biodiversidad y gestión forestal en Colombia. Actualmente en Canadá, integrando GIS, LiDAR, drones e IA en operaciones forestales modernas.</p>
-      <div class="hero-pills">
-        <span class="hero-pill green">R.P.F. in Training · OPFA</span>
-        <span class="hero-pill green">LiDAR · Drone · GIS</span>
-        <span class="hero-pill">ISO 14001 · ISO 9001</span>
-        <span class="hero-pill">
-          <span class="en-t">Environmental Assessment</span>
-          <span class="es-t">Evaluación de Impacto Ambiental</span>
-        </span>
+  <div class="hero-right">
+    <div class="hero-right-bg"></div>
+    <!-- Topographic / forest SVG art -->
+    <svg class="hero-map" viewBox="0 0 600 800" xmlns="http://www.w3.org/2000/svg" style="position:absolute;inset:0;z-index:2;">
+      <!-- Contour rings -->
+      <ellipse cx="300" cy="400" rx="280" ry="200" fill="none" stroke="#3d6b3d" stroke-width="0.8" opacity="0.25"/>
+      <ellipse cx="300" cy="400" rx="230" ry="160" fill="none" stroke="#3d6b3d" stroke-width="0.8" opacity="0.22"/>
+      <ellipse cx="300" cy="400" rx="185" ry="125" fill="none" stroke="#3d6b3d" stroke-width="1" opacity="0.2"/>
+      <ellipse cx="300" cy="400" rx="140" ry="92" fill="none" stroke="#3d6b3d" stroke-width="1.2" opacity="0.2"/>
+      <ellipse cx="300" cy="400" rx="98" ry="63" fill="none" stroke="#3d6b3d" stroke-width="1.5" opacity="0.22"/>
+      <ellipse cx="300" cy="400" rx="58" ry="36" fill="none" stroke="#3d6b3d" stroke-width="2" opacity="0.25"/>
+
+```
+  <!-- Decorative trees (triangles) -->
+  <g opacity="0.4" fill="#2d4a2d">
+    <polygon points="80,600 110,530 140,600"/>
+    <polygon points="88,600 108,558 128,600"/>
+    <polygon points="450,180 480,110 510,180"/>
+    <polygon points="458,180 478,138 498,180"/>
+    <polygon points="160,220 195,145 230,220"/>
+    <polygon points="170,220 192,170 214,220"/>
+    <polygon points="380,650 415,575 450,650"/>
+    <polygon points="390,650 412,600 434,650"/>
+    <polygon points="30,350 58,285 86,350"/>
+    <polygon points="37,350 56,305 75,350"/>
+    <polygon points="510,480 540,415 570,480"/>
+    <polygon points="518,480 537,435 556,480"/>
+  </g>
+
+  <!-- GPS cross marker -->
+  <g transform="translate(300,400)" opacity="0.7">
+    <circle cx="0" cy="0" r="18" fill="none" stroke="#d4a017" stroke-width="1.5"/>
+    <line x1="-28" y1="0" x2="28" y2="0" stroke="#d4a017" stroke-width="1"/>
+    <line x1="0" y1="-28" x2="0" y2="28" stroke="#d4a017" stroke-width="1"/>
+    <circle cx="0" cy="0" r="4" fill="#d4a017"/>
+    <text x="24" y="-22" font-family="monospace" font-size="10" fill="#8b6914" letter-spacing="1">GPS</text>
+  </g>
+
+  <!-- Grid lines -->
+  <g opacity="0.08" stroke="#1a2e1a" stroke-width="0.5">
+    <line x1="0" y1="100" x2="600" y2="100"/>
+    <line x1="0" y1="200" x2="600" y2="200"/>
+    <line x1="0" y1="300" x2="600" y2="300"/>
+    <line x1="0" y1="500" x2="600" y2="500"/>
+    <line x1="0" y1="600" x2="600" y2="600"/>
+    <line x1="0" y1="700" x2="600" y2="700"/>
+    <line x1="100" y1="0" x2="100" y2="800"/>
+    <line x1="200" y1="0" x2="200" y2="800"/>
+    <line x1="400" y1="0" x2="400" y2="800"/>
+    <line x1="500" y1="0" x2="500" y2="800"/>
+  </g>
+
+  <!-- Scale bar -->
+  <g transform="translate(40, 740)" opacity="0.5">
+    <line x1="0" y1="0" x2="120" y2="0" stroke="#2d4a2d" stroke-width="2"/>
+    <line x1="0" y1="-5" x2="0" y2="5" stroke="#2d4a2d" stroke-width="1.5"/>
+    <line x1="60" y1="-3" x2="60" y2="3" stroke="#2d4a2d" stroke-width="1"/>
+    <line x1="120" y1="-5" x2="120" y2="5" stroke="#2d4a2d" stroke-width="1.5"/>
+    <text x="50" y="16" font-family="monospace" font-size="8" fill="#2d4a2d">500 m</text>
+  </g>
+
+  <!-- Compass rose -->
+  <g transform="translate(540, 100)" opacity="0.6">
+    <polygon points="0,-22 5,-8 0,-2 -5,-8" fill="#2d4a2d"/>
+    <polygon points="0,22 5,8 0,2 -5,8" fill="#8ab88a"/>
+    <polygon points="-22,0 -8,5 -2,0 -8,-5" fill="#8ab88a"/>
+    <polygon points="22,0 8,5 2,0 8,-5" fill="#8ab88a"/>
+    <text x="-4" y="-26" font-family="monospace" font-size="10" fill="#1a2e1a" font-weight="bold">N</text>
+  </g>
+</svg>
+```
+
+  </div>
+
+  <div class="hero-scroll-hint" style="position:absolute; bottom:2rem; left:calc(25%);">
+    <span>Scroll</span>
+    <div class="scroll-line"></div>
+  </div>
+</section>
+
+<!-- ABOUT -->
+
+<section id="about">
+  <div class="container">
+    <div class="fade-in-section">
+      <div class="section-label">01 / Profile</div>
+      <div class="about-grid">
+        <div class="about-left">
+          <h2 class="section-title">Forest<br><em>Engineer</em><br>& GIS Expert</h2>
+          <blockquote class="about-summary">
+            Committed to the conservation of Ontario's natural landscapes and biodiversity, bringing rigorous field experience and spatial analysis skills to every project.
+          </blockquote>
+          <div class="about-stats">
+            <div class="stat">
+              <div class="stat-num">12+</div>
+              <div class="stat-label">Years experience</div>
+            </div>
+            <div class="stat">
+              <div class="stat-num">3</div>
+              <div class="stat-label">Languages</div>
+            </div>
+            <div class="stat">
+              <div class="stat-num">4</div>
+              <div class="stat-label">Postgrad diplomas</div>
+            </div>
+            <div class="stat">
+              <div class="stat-num">BZ</div>
+              <div class="stat-label">Ontario Licence</div>
+            </div>
+          </div>
+        </div>
+        <div class="about-right">
+          <div class="about-text">
+            <p>Forestry Engineer with deep experience in GIS, spatial data management, and environmental analysis. Skilled in developing cartographic products, performing spatial analysis, and maintaining geospatial datasets using ArcGIS Pro and QGIS.</p>
+            <p>Experienced in environmental impact assessments, forest inventory, and land stewardship initiatives across Colombia and Canada. From auditing forest harvesting for Ecopetrol to monitoring illicit crop eradication with UNODC, each role has sharpened a commitment to rigorous fieldwork and data integrity.</p>
+            <p>Detail-oriented professional with strong organizational and communication skills, currently serving as Administrative Volunteer at Ontario Nature and registered as R.P.F. in Training (#3081) with the Ontario Professional Foresters Association.</p>
+          </div>
+        </div>
       </div>
     </div>
   </div>
- 
-  <!-- EXPERIENCE -->
-  <section id="experience">
-    <div class="sec-label">
-      <span class="en-t">Professional journey</span>
-      <span class="es-t">Trayectoria profesional</span>
-    </div>
-    <h2 class="sec-title">
-      <span class="en-t">Work Experience<span class="sub">10+ years in forestry & environment</span></span>
-      <span class="es-t">Experiencia<span class="sub">Más de 10 años en ingeniería forestal y ambiente</span></span>
-    </h2>
- 
-    <div class="timeline">
- 
-      <!-- FANSHAWE -->
-      <div class="tl-item">
-        <div class="tl-dot"></div>
-        <div class="tl-meta">
-          <div class="tl-company">Fanshawe College</div>
-          <div class="tl-date">Jan 2023 – Sep 2023</div>
-          <div class="tl-location">London, Ontario, Canada</div>
-        </div>
-        <div class="tl-content">
-          <div class="tl-role">
-            <span class="en-t">Full-time Student — Remotely Piloted Aerial Systems</span>
-            <span class="es-t">Estudiante — Sistemas de Aeronaves Pilotadas Remotamente</span>
-          </div>
-          <p class="tl-desc en-t">Advanced training in drone surveying, point cloud processing and geospatial data capture. Gained hands-on experience with industry-standard photogrammetry and LiDAR tools applied to forestry and environmental monitoring.</p>
-          <p class="tl-desc es-t">Formación avanzada en topografía con drones, procesamiento de nubes de puntos y captura de datos geoespaciales. Experiencia práctica con fotogrametría y LiDAR aplicados a la ingeniería forestal.</p>
-          <div class="tl-tags">
-            <span class="tag">LiDAR</span>
-            <span class="tag">Pix4D</span>
-            <span class="tag">Metashape</span>
-            <span class="tag">Drone2map</span>
-            <span class="tag">Cloud Compare</span>
-            <span class="tag">EMLID</span>
-            <span class="tag">Reality Capture</span>
-            <span class="tag">GIS</span>
-          </div>
-        </div>
-      </div>
- 
-      <!-- SGI LTDA -->
-      <div class="tl-item">
-        <div class="tl-dot"></div>
-        <div class="tl-meta">
-          <div class="tl-company">SGI LTDA</div>
-          <div class="tl-date">Jan 2019 – May 2022</div>
-          <div class="tl-location">Barrancabermeja, Colombia</div>
-        </div>
-        <div class="tl-content">
-          <div class="tl-role">
-            <span class="en-t">Environmental Feasibility Professional</span>
-            <span class="es-t">Profesional de Viabilidad Ambiental</span>
-          </div>
-          <p class="tl-desc en-t">Led environmental feasibility studies for energy and infrastructure projects in the Magdalena Medio region. Responsible for flora inventory, impact assessments and biodiversity compensation planning under Colombian environmental regulations.</p>
-          <p class="tl-desc es-t">Lideró estudios de viabilidad ambiental para proyectos de energía e infraestructura en la región del Magdalena Medio. Responsable de inventarios de flora, evaluaciones de impacto y planes de compensación de biodiversidad.</p>
-          <div class="tl-tags">
-            <span class="tag">
-              <span class="en-t">Environmental Assessment</span>
-              <span class="es-t">Evaluación Ambiental</span>
-            </span>
-            <span class="tag">
-              <span class="en-t">Flora Inventory</span>
-              <span class="es-t">Inventario de Flora</span>
-            </span>
-            <span class="tag">
-              <span class="en-t">Biodiversity Compensation</span>
-              <span class="es-t">Compensación Biodiversidad</span>
-            </span>
-          </div>
-        </div>
-      </div>
- 
-      <!-- INERCO -->
-      <div class="tl-item">
-        <div class="tl-dot"></div>
-        <div class="tl-meta">
-          <div class="tl-company">INERCO</div>
-          <div class="tl-date">Sep 2018 – Dec 2018</div>
-          <div class="tl-location">Colombia</div>
-        </div>
-        <div class="tl-content">
-          <div class="tl-role">
-            <span class="en-t">Project Professional — Flora & EIA</span>
-            <span class="es-t">Profesional de Proyectos — Flora y EIA</span>
-          </div>
-          <p class="tl-desc en-t">Responsible for the flora component of the Environmental Impact Assessment (EIA) for the Mariquita–Gualanday gas pipeline construction (TGI). Supported the biodiversity loss compensation plan.</p>
-          <p class="tl-desc es-t">Responsable del componente de flora en el EIA para la construcción del gasoducto Mariquita–Gualanday (TGI). Apoyo al Plan de Compensación por Pérdida de Biodiversidad.</p>
-          <div class="tl-tags">
-            <span class="tag">EIA</span>
-            <span class="tag">TGI Pipeline</span>
-            <span class="tag">
-              <span class="en-t">Biodiversity Compensation</span>
-              <span class="es-t">Compensación Biodiversidad</span>
-            </span>
-          </div>
-        </div>
-      </div>
- 
-      <!-- CONSULTORÍA COLOMBIANA -->
-      <div class="tl-item">
-        <div class="tl-dot"></div>
-        <div class="tl-meta">
-          <div class="tl-company">Consultoría Colombiana S.A.</div>
-          <div class="tl-date">Oct 2017 – Feb 2018</div>
-          <div class="tl-location">Bogotá, Colombia</div>
-        </div>
-        <div class="tl-content">
-          <div class="tl-role">
-            <span class="en-t">Forestry Engineer</span>
-            <span class="es-t">Ingeniero Forestal</span>
-          </div>
-          <p class="tl-desc en-t">Environmental and forestry consulting for infrastructure and energy projects, including field surveys and technical reporting.</p>
-          <p class="tl-desc es-t">Consultoría ambiental y forestal para proyectos de infraestructura y energía, incluyendo levantamientos de campo e informes técnicos.</p>
-        </div>
-      </div>
- 
-      <!-- WSP -->
-      <div class="tl-item">
-        <div class="tl-dot"></div>
-        <div class="tl-meta">
-          <div class="tl-company">WSP</div>
-          <div class="tl-date">May 2017 – Jul 2017</div>
-          <div class="tl-location">Bogotá, Colombia</div>
-        </div>
-        <div class="tl-content">
-          <div class="tl-role">
-            <span class="en-t">Forestry Engineer</span>
-            <span class="es-t">Ingeniero Forestal</span>
-          </div>
-          <p class="tl-desc en-t">Environmental engineering support at WSP, one of the world's leading professional services firms, contributing to forestry and environmental assessments.</p>
-          <p class="tl-desc es-t">Soporte en ingeniería ambiental en WSP, una de las firmas líderes de servicios profesionales a nivel mundial, contribuyendo en evaluaciones forestales y ambientales.</p>
-          <div class="tl-tags">
-            <span class="tag earth">WSP Global</span>
+</section>
+
+<!-- EXPERIENCE -->
+
+<section id="experience">
+  <div class="container">
+    <div class="section-label">02 / Experience</div>
+    <h2 class="section-title">Work <em>History</em></h2>
+
+```
+<div class="timeline">
+
+  <div class="timeline-item">
+    <div class="tl-date">Oct 2025 — Present</div>
+    <div class="tl-role">Bus Driver</div>
+    <div class="tl-company">Metrolinx · North York, ON</div>
+    <div class="tl-desc">Safe and reliable transportation services with strong attention to detail. Full compliance with Ontario traffic regulations.</div>
+  </div>
+
+  <div class="timeline-item">
+    <div class="tl-date">Jul 2024 — Apr 2025</div>
+    <div class="tl-role">Transit Operator</div>
+    <div class="tl-company">Miller Transit · Richmond Hill, ON</div>
+    <div class="tl-desc">Daily pre-trip inspections ensuring optimal transit bus performance. Courteous and safe vehicle operation at all times.</div>
+  </div>
+
+  <div class="timeline-item">
+    <div class="tl-date">Sep 2023 — Jun 2024</div>
+    <div class="tl-role">School Bus Driver</div>
+    <div class="tl-company">Wheelchair Accessible Transit · North York, ON</div>
+    <div class="tl-desc">Ensuring student safety and optimal bus performance on daily routes. Pre-trip inspections and responsible service delivery.</div>
+  </div>
+
+  <div class="timeline-item">
+    <div class="tl-date">Jan 2019 — May 2022</div>
+    <div class="tl-role">Advanced Professional B</div>
+    <div class="tl-company">SGI SAS · Colombia</div>
+    <div class="tl-desc">Implementation of the Environmental Recovery Plan in LISAMA 158. Forest inventories, vegetation characterization in diverse ecosystems, and active participation in reforestation and ecosystem restoration initiatives.</div>
+  </div>
+
+  <div class="timeline-item">
+    <div class="tl-date">Sep 2018 — Dec 2018</div>
+    <div class="tl-role">Project Professional II</div>
+    <div class="tl-company">INERCO Consulting Colombia</div>
+    <div class="tl-desc">Coordinated field data collection for the Forest Compensation Plan. Authored the Flora chapter — including forest structural analysis and GeoDataBase — for the Environmental Impact Assessment of the Loop 10" gas pipeline (Mariquita–Gualanday, TGI Colombia).</div>
+  </div>
+
+  <div class="timeline-item">
+    <div class="tl-date">Nov 2017 — Jul 2018</div>
+    <div class="tl-role">Support Engineer</div>
+    <div class="tl-company">CONCOL by WSP · Colombia</div>
+    <div class="tl-desc">Authored Environmental and Forest Management Plans. Led field operations and logistics for forest inventories. Maintained structured datasets and performed data entry, validation, and file organization.</div>
+  </div>
+
+  <div class="timeline-item">
+    <div class="tl-date">Aug 2017 — Nov 2017</div>
+    <div class="tl-role">External Consultant</div>
+    <div class="tl-company">ECOLOKYE SAS · Antioquia, Colombia</div>
+    <div class="tl-desc">Resident Forestry Engineer for forestry offsetting and silvicultural management in the El Chocho project, Segovia Municipality. Environmental compliance monitoring and reporting.</div>
+  </div>
+
+  <div class="timeline-item">
+    <div class="tl-date">Oct 2013 — Jan 2014</div>
+    <div class="tl-role">MEG Monitor</div>
+    <div class="tl-company">United Nations Office on Drugs and Crime (UNODC)</div>
+    <div class="tl-desc">On-field monitoring of illicit crop eradication operations. Prepared and submitted technical compliance reports to the national government.</div>
+  </div>
+
+  <div class="timeline-item">
+    <div class="tl-date">Oct 2012 — Aug 2013</div>
+    <div class="tl-role">Forestry Engineer</div>
+    <div class="tl-company">AngelGold Mining Co. SAS · Antioquia, Colombia</div>
+    <div class="tl-desc">Forest inventory and reforestation of "La Honda" river protection areas using native species. Data documentation and guidance for consistent dataset use.</div>
+  </div>
+
+</div>
+```
+
+  </div>
+</section>
+
+<!-- SKILLS -->
+
+<section id="skills">
+  <div class="container">
+    <div class="fade-in-section">
+      <div class="section-label">03 / Expertise</div>
+      <h2 class="section-title">Skills &<br><em>Toolset</em></h2>
+      <div class="skills-grid">
+        <div class="skill-cat">
+          <span class="skill-cat-icon">🗺️</span>
+          <div class="skill-cat-title">GIS & Spatial Tools</div>
+          <div class="skill-tags">
+            <span class="skill-tag">ArcGIS Pro</span>
+            <span class="skill-tag">QGIS</span>
+            <span class="skill-tag">Pix4D</span>
+            <span class="skill-tag">Agisoft</span>
+            <span class="skill-tag">Avenza Maps</span>
           </div>
         </div>
-      </div>
- 
-      <!-- UNODC -->
-      <div class="tl-item">
-        <div class="tl-dot"></div>
-        <div class="tl-meta">
-          <div class="tl-company">UNODC</div>
-          <div class="tl-date">Oct 2013 – Jan 2014</div>
-          <div class="tl-location">Bogotá, Colombia</div>
-        </div>
-        <div class="tl-content">
-          <div class="tl-role">
-            <span class="en-t">GME Monitor</span>
-            <span class="es-t">Monitor GME</span>
-          </div>
-          <p class="tl-desc en-t">Field monitoring for the United Nations Office on Drugs and Crime (UNODC), contributing to environmental and land monitoring programmes in Colombia.</p>
-          <p class="tl-desc es-t">Monitoreo de campo para la Oficina de las Naciones Unidas contra la Droga y el Delito (UNODC), contribuyendo a programas de monitoreo ambiental y territorial en Colombia.</p>
-          <div class="tl-tags">
-            <span class="tag earth">UN / ONU</span>
+        <div class="skill-cat">
+          <span class="skill-cat-icon">📊</span>
+          <div class="skill-cat-title">Data & Database</div>
+          <div class="skill-tags">
+            <span class="skill-tag">SQL</span>
+            <span class="skill-tag">MS Access</span>
+            <span class="skill-tag">Metadata Management</span>
+            <span class="skill-tag">QA/QC</span>
           </div>
         </div>
-      </div>
- 
-      <!-- DOCENTE -->
-      <div class="tl-item">
-        <div class="tl-dot"></div>
-        <div class="tl-meta">
-          <div class="tl-company">Tecnológica Fitec</div>
-          <div class="tl-date">Jan 2008 – Jun 2011</div>
-          <div class="tl-location">Colombia</div>
-        </div>
-        <div class="tl-content">
-          <div class="tl-role">
-            <span class="en-t">Lecturer / Professor</span>
-            <span class="es-t">Docente</span>
+        <div class="skill-cat">
+          <span class="skill-cat-icon">🛸</span>
+          <div class="skill-cat-title">Field & Remote Sensing</div>
+          <div class="skill-tags">
+            <span class="skill-tag">GPS Data</span>
+            <span class="skill-tag">KML Files</span>
+            <span class="skill-tag">RPAS / Drone</span>
+            <span class="skill-tag">RTK Surveying</span>
+            <span class="skill-tag">Remote Imagery</span>
           </div>
-          <p class="tl-desc en-t">Teaching technical and environmental subjects for 3.5 years, developing skills in knowledge transfer, curriculum design and diverse classroom management.</p>
-          <p class="tl-desc es-t">Docencia de materias técnicas y ambientales durante 3,5 años, desarrollando habilidades de transmisión del conocimiento, diseño curricular y gestión de aulas diversas.</p>
         </div>
-      </div>
- 
-    </div>
-  </section>
- 
-  <div class="section-divider" style="margin-top:60px;"></div>
- 
-  <!-- EDUCATION -->
-  <section id="education">
-    <div class="sec-label">
-      <span class="en-t">Academic background</span>
-      <span class="es-t">Formación académica</span>
-    </div>
-    <h2 class="sec-title">
-      <span class="en-t">Education</span>
-      <span class="es-t">Educación</span>
-    </h2>
- 
-    <!-- RPF Banner -->
-    <div class="rpf-banner">
-      <div class="rpf-icon">🌿</div>
-      <div class="rpf-text">
-        <div class="rpf-label">Ontario Professional Foresters Association</div>
-        <div class="rpf-title">R.P.F. in Training</div>
-        <div class="rpf-desc en-t">Registered Professional Forester in Training · Issued May 2023</div>
-        <div class="rpf-desc es-t">Ingeniero Forestal Profesional Registrado en Formación · Emitido mayo 2023</div>
-      </div>
-    </div>
- 
-    <div class="edu-grid">
-      <div class="edu-card">
-        <div class="edu-year">2023</div>
-        <div class="edu-degree en-t">Remotely Piloted Aerial Systems</div>
-        <div class="edu-degree es-t">Sistemas de Aeronaves Pilotadas Remotamente</div>
-        <div class="edu-inst">Fanshawe College · London, ON</div>
-      </div>
-      <div class="edu-card">
-        <div class="edu-year">2022 – 2023</div>
-        <div class="edu-degree en-t">Project Management – Environmental</div>
-        <div class="edu-degree es-t">Gestión de Proyectos – Medioambiente</div>
-        <div class="edu-inst">Seneca Polytechnic · Toronto, ON</div>
-      </div>
-      <div class="edu-card">
-        <div class="edu-year">2020 – 2021</div>
-        <div class="edu-degree en-t">Social & Solidarity Economy Management</div>
-        <div class="edu-degree es-t">Gestión de Economía Social y Solidaria</div>
-        <div class="edu-inst">Pontificia Universidad Javeriana</div>
-      </div>
-      <div class="edu-card">
-        <div class="edu-year">2016 – 2018</div>
-        <div class="edu-degree en-t">Master's — Management Systems & Corporate Responsibility</div>
-        <div class="edu-degree es-t">Máster — Sistemas de Gestión y Responsabilidad Corporativa</div>
-        <div class="edu-inst">Universidad Camilo José Cela · Madrid</div>
-      </div>
-      <div class="edu-card">
-        <div class="edu-year">2018</div>
-        <div class="edu-degree en-t">Diploma — Biodiversity Loss Compensation</div>
-        <div class="edu-degree es-t">Diplomado — Compensaciones Ambientales por Pérdida de Biodiversidad</div>
-        <div class="edu-inst">Pontificia Universidad Javeriana</div>
-      </div>
-      <div class="edu-card" style="border-top-color: var(--earth-light);">
-        <div class="edu-year" style="color:var(--forest-mid);">Base</div>
-        <div class="edu-degree en-t">Forestry Engineering</div>
-        <div class="edu-degree es-t">Ingeniería Forestal</div>
-        <div class="edu-inst">Universidad Industrial de Santander · Bucaramanga</div>
-      </div>
-    </div>
-  </section>
- 
-  <div class="section-divider" style="margin-top:60px;"></div>
- 
-  <!-- CERTIFICATIONS -->
-  <section id="certifications">
-    <div class="sec-label">
-      <span class="en-t">Credentials</span>
-      <span class="es-t">Acreditaciones</span>
-    </div>
-    <h2 class="sec-title">
-      <span class="en-t">Certifications & Licences</span>
-      <span class="es-t">Certificaciones y Licencias</span>
-    </h2>
-    <div class="cert-grid">
-      <div class="cert-card">
-        <div class="cert-icon">🏭</div>
-        <div class="cert-body">
-          <div class="cert-name en-t">Internal Auditor ISO 14001:2015</div>
-          <div class="cert-name es-t">Auditor Interno ISO 14001:2015</div>
-          <div class="cert-issuer">Bureau Veritas · 2018</div>
-        </div>
-      </div>
-      <div class="cert-card">
-        <div class="cert-icon">⚙️</div>
-        <div class="cert-body">
-          <div class="cert-name en-t">Internal Auditor ISO 9001:2015</div>
-          <div class="cert-name es-t">Auditor Interno ISO 9001:2015</div>
-          <div class="cert-issuer">Bureau Veritas · 2018</div>
-        </div>
-      </div>
-      <div class="cert-card">
-        <div class="cert-icon">🦺</div>
-        <div class="cert-body">
-          <div class="cert-name en-t">Internal Auditor OHSAS 18001:2007</div>
-          <div class="cert-name es-t">Auditor Interno OHSAS 18001:2007</div>
-          <div class="cert-issuer">Bureau Veritas · 2018</div>
-        </div>
-      </div>
-      <div class="cert-card">
-        <div class="cert-icon">🌿</div>
-        <div class="cert-body">
-          <div class="cert-name en-t">Biodiversity Compensation — Manual 2018</div>
-          <div class="cert-name es-t">Compensaciones del Componente Biótico — Manual 2018</div>
-          <div class="cert-issuer">Pontificia Universidad Javeriana</div>
-        </div>
-      </div>
-      <div class="cert-card">
-        <div class="cert-icon">🌍</div>
-        <div class="cert-body">
-          <div class="cert-name">IELTS</div>
-          <div class="cert-issuer">British Council · Jul 2021</div>
-        </div>
-      </div>
-      <div class="cert-card">
-        <div class="cert-icon">🤖</div>
-        <div class="cert-body">
-          <div class="cert-name en-t">What is Generative AI?</div>
-          <div class="cert-name es-t">¿Qué es la IA Generativa?</div>
-          <div class="cert-issuer">LinkedIn · Mar 2026</div>
-        </div>
-      </div>
-      <div class="cert-card">
-        <div class="cert-icon">📊</div>
-        <div class="cert-body">
-          <div class="cert-name en-t">Data Visualization: Storytelling</div>
-          <div class="cert-name es-t">Visualización de Datos: Storytelling</div>
-          <div class="cert-issuer">LinkedIn · Mar 2026</div>
-        </div>
-      </div>
-    </div>
-  </section>
- 
-  <div class="section-divider" style="margin-top:60px;"></div>
- 
-  <!-- SKILLS -->
-  <section id="skills">
-    <div class="sec-label">
-      <span class="en-t">Competencies</span>
-      <span class="es-t">Competencias</span>
-    </div>
-    <h2 class="sec-title">
-      <span class="en-t">Skills & Technology</span>
-      <span class="es-t">Habilidades y Tecnología</span>
-    </h2>
-    <div class="skills-grid">
-      <div class="skill-card">
-        <div class="skill-cat en-t">Forestry & Environment</div>
-        <div class="skill-cat es-t">Ingeniería Forestal y Ambiente</div>
-        <div class="skill-list">
-          <div class="skill-item en-t">Environmental Impact Assessment (EIA)</div>
-          <div class="skill-item es-t">Evaluación de Impacto Ambiental (EIA)</div>
-          <div class="skill-item en-t">Biodiversity Loss Compensation</div>
-          <div class="skill-item es-t">Compensación por Pérdida de Biodiversidad</div>
-          <div class="skill-item en-t">Flora Inventory & Field Surveys</div>
-          <div class="skill-item es-t">Inventario de Flora y Levantamientos de Campo</div>
-          <div class="skill-item en-t">Forest Management & Planning</div>
-          <div class="skill-item es-t">Gestión y Planificación Forestal</div>
-        </div>
-      </div>
-      <div class="skill-card">
-        <div class="skill-cat en-t">Geospatial & Drone</div>
-        <div class="skill-cat es-t">Geoespacial y Drones</div>
-        <div class="skill-list">
-          <div class="skill-item">GIS / SIG</div>
-          <div class="skill-item">LiDAR</div>
-          <div class="skill-item">Pix4D · Metashape · Drone2map</div>
-          <div class="skill-item">Cloud Compare · Reality Capture</div>
-          <div class="skill-item">EMLID</div>
-        </div>
-      </div>
-      <div class="skill-card">
-        <div class="skill-cat en-t">Management Systems</div>
-        <div class="skill-cat es-t">Sistemas de Gestión</div>
-        <div class="skill-list">
-          <div class="skill-item">ISO 14001:2015</div>
-          <div class="skill-item">ISO 9001:2015</div>
-          <div class="skill-item">OHSAS 18001:2007</div>
-          <div class="skill-item en-t">Environmental Project Management</div>
-          <div class="skill-item es-t">Gestión de Proyectos Ambientales</div>
-        </div>
-      </div>
-      <div class="skill-card">
-        <div class="skill-cat en-t">Languages</div>
-        <div class="skill-cat es-t">Idiomas</div>
-        <div class="lang-bars">
-          <div class="lang-row">
-            <div class="lang-name">Español</div>
-            <div class="lang-bar-bg"><div class="lang-bar-fill" style="width:100%"></div></div>
-            <div class="lang-level">Native</div>
-          </div>
-          <div class="lang-row">
-            <div class="lang-name">English</div>
-            <div class="lang-bar-bg"><div class="lang-bar-fill" style="width:75%"></div></div>
-            <div class="lang-level">B2 · IELTS</div>
+        <div class="skill-cat">
+          <span class="skill-cat-icon">🌲</span>
+          <div class="skill-cat-title">Forestry & Environment</div>
+          <div class="skill-tags">
+            <span class="skill-tag">Forest Inventory</span>
+            <span class="skill-tag">EIA</span>
+            <span class="skill-tag">Reforestation</span>
+            <span class="skill-tag">Cartography</span>
+            <span class="skill-tag">Ecosystem Restoration</span>
           </div>
         </div>
       </div>
     </div>
-  </section>
- 
-  <div class="section-divider" style="margin-top:60px;"></div>
- 
-  <!-- CONTACT -->
-  <section id="contact">
-    <div class="sec-label">
-      <span class="en-t">Get in touch</span>
-      <span class="es-t">Contacto</span>
-    </div>
-    <h2 class="sec-title">
-      <span class="en-t">Contact</span>
-      <span class="es-t">Contacto</span>
-    </h2>
-    <div class="contact-grid">
-      <div>
-        <div class="contact-block-title en-t">Location</div>
-        <div class="contact-block-title es-t">Ubicación</div>
-        <div class="contact-item">
-          <div class="contact-item-label">
-            <span class="en-t">City</span><span class="es-t">Ciudad</span>
-          </div>
-          <div class="contact-item-value">North York, Ontario, Canada</div>
+  </div>
+</section>
+
+<!-- EDUCATION -->
+
+<section id="education">
+  <div class="container">
+    <div class="fade-in-section">
+      <div class="section-label">04 / Education</div>
+      <h2 class="section-title">Academic<br><em>Formation</em></h2>
+      <div class="edu-grid">
+        <div class="edu-card">
+          <div class="edu-year">2023</div>
+          <div class="edu-degree">Postgraduate Diploma — Remotely Piloted Aerial Systems (RPAS)</div>
+          <div class="edu-school">Fanshawe College · London, Canada</div>
         </div>
-        <div class="contact-item">
-          <div class="contact-item-label">LinkedIn</div>
-          <div class="contact-item-value">
-            <a href="https://linkedin.com/in/ivan-mauricio-adarme-72276616" target="_blank">linkedin.com/in/ivan-mauricio-adarme</a>
-          </div>
+        <div class="edu-card">
+          <div class="edu-year">2022</div>
+          <div class="edu-degree">Postgraduate Diploma — Project Management (Environmental)</div>
+          <div class="edu-school">Seneca College · Toronto, Canada</div>
         </div>
-        <div class="contact-item">
-          <div class="contact-item-label">
-            <span class="en-t">Professional Status</span>
-            <span class="es-t">Estatus Profesional</span>
-          </div>
-          <div class="contact-item-value" style="font-size:14px;color:var(--forest-mid);">
-            <span class="en-t">R.P.F. in Training · Ontario Professional Foresters Association</span>
-            <span class="es-t">R.P.F. en Formación · Ontario Professional Foresters Association</span>
-          </div>
+        <div class="edu-card">
+          <div class="edu-year">2021</div>
+          <div class="edu-degree">Postgraduate Diploma — Social & Solidarity Economy Organizations</div>
+          <div class="edu-school">Javeriana University · Bogotá, Colombia</div>
+        </div>
+        <div class="edu-card">
+          <div class="edu-year">2019</div>
+          <div class="edu-degree">Master's — Safety, Environment & Enterprise Social Responsibility</div>
+          <div class="edu-school">Camilo José Cela University · Madrid, Spain</div>
+        </div>
+        <div class="edu-card">
+          <div class="edu-year">2007</div>
+          <div class="edu-degree">Forestry Engineer — Bachelor's Degree</div>
+          <div class="edu-school">Universidad Industrial de Santander · Bucaramanga, Colombia</div>
         </div>
       </div>
-      <div>
-        <div class="contact-block-title en-t">Open to</div>
-        <div class="contact-block-title es-t">Disponible para</div>
-        <div class="tl-tags" style="margin-top:0;">
-          <span class="tag en-t">Forestry consulting</span>
-          <span class="tag es-t">Consultoría forestal</span>
-          <span class="tag en-t">Environmental assessment</span>
-          <span class="tag es-t">Evaluación ambiental</span>
-          <span class="tag en-t">GIS & drone projects</span>
-          <span class="tag es-t">Proyectos GIS y drones</span>
-          <span class="tag en-t">Ontario / Canada</span>
-          <span class="tag es-t">Ontario / Canadá</span>
-          <span class="tag earth en-t">R.P.F. path opportunities</span>
-          <span class="tag earth es-t">Oportunidades hacia RPF</span>
-        </div>
-      </div>
+
+```
+  <div class="lang-grid">
+    <div class="lang-item">
+      <div class="lang-name">Español</div>
+      <div class="lang-level">Native</div>
     </div>
-  </section>
- 
-</main>
- 
+    <div class="lang-item">
+      <div class="lang-name">English</div>
+      <div class="lang-level">Fluent</div>
+    </div>
+    <div class="lang-item">
+      <div class="lang-name">Français</div>
+      <div class="lang-level">Advanced</div>
+    </div>
+  </div>
+</div>
+```
+
+  </div>
+</section>
+
+<!-- CONTACT -->
+
+<section id="contact">
+  <div class="section-label">05 / Contact</div>
+  <h2 class="section-title">Get in <em>Touch</em></h2>
+  <p class="contact-sub">Open to GIS, forestry, and environmental roles in Ontario</p>
+  <div class="contact-links">
+    <a href="mailto:ivanmauricioadarme@gmail.com" class="contact-link">
+      ✉ Email
+    </a>
+    <a href="tel:+14379743091" class="contact-link">
+      📞 +1 437-974-3091
+    </a>
+    <a href="https://linkedin.com/in/ivan-mauricio-adarme-72276616" target="_blank" class="contact-link">
+      in LinkedIn
+    </a>
+  </div>
+</section>
+
+<footer>
+  © 2026 Ivan Mauricio Adarme Cornejo · R.P.F. in Training #3081 · Ontario, Canada
+</footer>
+
 <script>
-function setLang(lang) {
-  const isEN = lang === 'en';
-  document.querySelectorAll('.en-t').forEach(el => {
-    el.style.display = isEN ? (el.tagName === 'SPAN' ? 'inline' : 'block') : 'none';
+  // CUSTOM CURSOR
+  const cursor = document.getElementById('cursor');
+  const ring = document.getElementById('cursorRing');
+  let mx = 0, my = 0, rx = 0, ry = 0;
+  document.addEventListener('mousemove', e => {
+    mx = e.clientX; my = e.clientY;
+    cursor.style.left = mx + 'px';
+    cursor.style.top = my + 'px';
   });
-  document.querySelectorAll('.es-t').forEach(el => {
-    el.style.display = isEN ? 'none' : (el.tagName === 'SPAN' ? 'inline' : 'block');
+  function animateRing() {
+    rx += (mx - rx) * 0.12;
+    ry += (my - ry) * 0.12;
+    ring.style.left = rx + 'px';
+    ring.style.top = ry + 'px';
+    requestAnimationFrame(animateRing);
+  }
+  animateRing();
+
+  // INTERSECTION OBSERVER for scroll animations
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+      }
+    });
+  }, { threshold: 0.12, rootMargin: '0px 0px -60px 0px' });
+
+  document.querySelectorAll('.fade-in-section, .timeline-item, .edu-card').forEach(el => {
+    observer.observe(el);
   });
-  document.getElementById('btn-en').classList.toggle('active', isEN);
-  document.getElementById('btn-es').classList.toggle('active', !isEN);
-}
- 
-// Nav highlight on scroll
-const sections = document.querySelectorAll('section[id], div[id]');
-const navLinks = document.querySelectorAll('.nav-link');
-const observer = new IntersectionObserver(entries => {
-  entries.forEach(e => {
-    if (e.isIntersecting) {
-      navLinks.forEach(a => a.classList.remove('active'));
-      const active = document.querySelector(`.nav-link[href="#${e.target.id}"]`);
-      if (active) active.classList.add('active');
-    }
+
+  // Stagger timeline items
+  document.querySelectorAll('.timeline-item').forEach((el, i) => {
+    el.style.transitionDelay = (i * 0.08) + 's';
   });
-}, { threshold: 0.3 });
-sections.forEach(s => observer.observe(s));
+
+  // Stagger edu cards
+  document.querySelectorAll('.edu-card').forEach((el, i) => {
+    el.style.transitionDelay = (i * 0.1) + 's';
+  });
+
+  // NAV active highlight on scroll
+  const sections = document.querySelectorAll('section[id]');
+  const navLinks = document.querySelectorAll('.nav-links a');
+  window.addEventListener('scroll', () => {
+    let current = '';
+    sections.forEach(s => {
+      if (window.scrollY >= s.offsetTop - 200) current = s.id;
+    });
+    navLinks.forEach(a => {
+      a.style.color = a.getAttribute('href') === '#' + current ? 'var(--bark)' : '';
+    });
+  }, { passive: true });
 </script>
+
 </body>
 </html>
