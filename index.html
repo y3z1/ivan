@@ -6,719 +6,211 @@
 <title>Ivan Mauricio Adarme — GIS Specialist & Forestry Engineer</title>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400;500&family=IBM+Plex+Sans:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,700;0,900;1,400&display=swap" rel="stylesheet">
 <style>
-/* ── TOKENS ─────────────────────────────────────────── */
 :root {
-  --g900: #0d1f0d;
-  --g800: #1a3a1a;
-  --g700: #2d5a2d;
-  --g600: #3d7a3d;
-  --g400: #6aaa6a;
-  --g200: #b8d8b8;
-  --g100: #dceedd;
-  --cream: #faf7f0;
-  --cream2: #f0ede4;
-  --amber: #d4a017;
-  --amber2: #b8860b;
-  --ink: #111111;
-  --ink2: #2a2a2a;
-  --ink3: #555555;
-  --panel: rgba(13,31,13,0.96);
-  --grid: rgba(45,90,45,0.12);
-  --mono: 'IBM Plex Mono', monospace;
-  --sans: 'IBM Plex Sans', sans-serif;
-  --serif: 'Playfair Display', serif;
+  --g900:#0d1f0d;--g800:#1a3a1a;--g700:#2d5a2d;--g600:#3d7a3d;
+  --g400:#6aaa6a;--g200:#b8d8b8;--g100:#dceedd;
+  --cream:#faf7f0;--cream2:#f0ede4;
+  --amber:#d4a017;--amber2:#b8860b;
+  --ink:#111111;--ink2:#2a2a2a;--ink3:#555555;
+  --panel:rgba(13,31,13,0.96);--grid:rgba(45,90,45,0.12);
+  --mono:'IBM Plex Mono',monospace;--sans:'IBM Plex Sans',sans-serif;--serif:'Playfair Display',serif;
 }
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;font-size:16px;}
+body{font-family:var(--sans);background:var(--cream);color:var(--ink);overflow-x:hidden;}
+a{text-decoration:none;color:inherit;}
 
-/* ── RESET ──────────────────────────────────────────── */
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-html { scroll-behavior: smooth; font-size: 16px; }
-body {
-  font-family: var(--sans);
-  background: var(--cream);
-  color: var(--ink);
-  overflow-x: hidden;
-}
-a { text-decoration: none; color: inherit; }
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:200;background:var(--panel);border-bottom:1px solid var(--g700);display:flex;align-items:center;justify-content:space-between;padding:0 1.5rem;height:48px;gap:1rem;}
+.nav-id{font-family:var(--mono);font-size:0.6rem;letter-spacing:0.12em;color:var(--amber);display:flex;align-items:center;gap:0.6rem;white-space:nowrap;}
+.nav-id::before{content:'';display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--amber);animation:navPing 2s infinite;}
+@keyframes navPing{0%,100%{box-shadow:0 0 0 0 rgba(212,160,23,0.4);}50%{box-shadow:0 0 0 5px rgba(212,160,23,0);}}
+.nav-center{display:flex;list-style:none;}
+.nav-center a{font-family:var(--mono);font-size:0.56rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--g200);padding:0 1rem;height:48px;display:flex;align-items:center;border-left:1px solid var(--g700);transition:background 0.2s,color 0.2s;}
+.nav-center a:hover{background:rgba(45,90,45,0.3);color:var(--amber);}
+.lang-switcher{display:flex;gap:2px;align-items:center;border-left:1px solid var(--g700);padding-left:1rem;}
+.lang-btn{font-family:var(--mono);font-size:0.58rem;letter-spacing:0.1em;background:transparent;border:1px solid transparent;color:var(--g400);padding:0.25rem 0.55rem;cursor:pointer;transition:all 0.2s;}
+.lang-btn:hover{color:var(--amber);border-color:var(--g700);}
+.lang-btn.active{color:var(--amber);border-color:var(--amber2);background:rgba(212,160,23,0.1);}
 
-/* ── UTILITY ────────────────────────────────────────── */
-.mono { font-family: var(--mono); }
-.label {
-  font-family: var(--mono);
-  font-size: 0.6rem;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  color: var(--g400);
-}
-.container { max-width: 1140px; margin: 0 auto; padding: 0 2rem; }
+/* HERO */
+#hero{min-height:100vh;padding-top:48px;position:relative;background:var(--g900);overflow:hidden;display:flex;align-items:center;}
+#mapCanvas{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;}
+#hero::before{content:'';position:absolute;inset:0;z-index:1;background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);background-size:60px 60px;pointer-events:none;}
+#hero::after{content:'';position:absolute;inset:0;z-index:2;pointer-events:none;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,0.03) 2px,rgba(0,0,0,0.03) 4px);}
+.hero-content{position:relative;z-index:10;padding:4rem 2rem 4rem 3rem;max-width:640px;}
+.hero-coords{font-family:var(--mono);font-size:0.6rem;letter-spacing:0.15em;color:var(--amber);margin-bottom:1.5rem;display:flex;gap:1.5rem;}
+.hero-badge{display:inline-flex;align-items:center;gap:0.5rem;font-family:var(--mono);font-size:0.56rem;letter-spacing:0.18em;text-transform:uppercase;color:var(--g200);border:1px solid var(--g600);padding:0.3rem 0.8rem;margin-bottom:1.5rem;background:rgba(45,90,45,0.15);}
+.hero-badge::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--g400);flex-shrink:0;}
+h1.hero-name{font-family:var(--serif);font-size:clamp(2.8rem,6vw,5rem);font-weight:900;color:#fff;line-height:1.0;letter-spacing:-0.02em;margin-bottom:0.5rem;}
+h1.hero-name em{font-style:italic;color:var(--g200);}
+.hero-title{font-family:var(--sans);font-size:clamp(0.9rem,1.5vw,1.1rem);font-weight:300;color:var(--g200);letter-spacing:0.08em;margin-bottom:0.75rem;}
+.hero-rpf{font-family:var(--mono);font-size:0.65rem;color:var(--amber);letter-spacing:0.12em;margin-bottom:2.5rem;padding-left:0.8rem;border-left:2px solid var(--amber2);}
+.hero-contact-grid{display:grid;grid-template-columns:1fr 1fr;gap:0;border:1px solid var(--g700);max-width:440px;}
+.hero-contact-item{padding:0.75rem 1rem;border-right:1px solid var(--g700);border-bottom:1px solid var(--g700);}
+.hero-contact-item:nth-child(even){border-right:none;}
+.hero-contact-item:nth-last-child(-n+2){border-bottom:none;}
+.clabel{font-family:var(--mono);font-size:0.56rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--g400);margin-bottom:0.25rem;}
+.hero-contact-item a,.hero-contact-item span{font-family:var(--mono);font-size:0.65rem;color:#fff;transition:color 0.2s;}
+.hero-contact-item a:hover{color:var(--amber);}
+.hero-compass{position:absolute;right:3rem;bottom:3rem;z-index:10;opacity:0.7;}
 
-/* ── NAV ────────────────────────────────────────────── */
-nav {
-  position: fixed; top: 0; left: 0; right: 0; z-index: 200;
-  background: var(--panel);
-  border-bottom: 1px solid var(--g700);
-  display: flex; align-items: center; justify-content: space-between;
-  padding: 0 2rem; height: 48px;
-}
-.nav-id {
-  font-family: var(--mono);
-  font-size: 0.65rem;
-  letter-spacing: 0.15em;
-  color: var(--amber);
-  display: flex; align-items: center; gap: 0.75rem;
-}
-.nav-id::before {
-  content: '';
-  display: inline-block;
-  width: 8px; height: 8px;
-  border-radius: 50%;
-  background: var(--amber);
-  animation: navPing 2s infinite;
-}
-@keyframes navPing {
-  0%,100% { opacity: 1; box-shadow: 0 0 0 0 rgba(212,160,23,0.4); }
-  50% { opacity: 0.8; box-shadow: 0 0 0 6px rgba(212,160,23,0); }
-}
-.nav-links {
-  display: flex; gap: 0; list-style: none;
-}
-.nav-links a {
-  font-family: var(--mono);
-  font-size: 0.58rem;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: var(--g200);
-  padding: 0 1.2rem; height: 48px;
-  display: flex; align-items: center;
-  border-left: 1px solid var(--g700);
-  transition: background 0.2s, color 0.2s;
-}
-.nav-links a:hover { background: rgba(45,90,45,0.3); color: var(--amber); }
+/* SECTIONS */
+section{padding:5rem 0;}
+.container{max-width:1140px;margin:0 auto;padding:0 2rem;}
+.sec-header{display:flex;align-items:flex-start;gap:1.5rem;margin-bottom:3rem;padding-bottom:1rem;border-bottom:1px solid var(--g200);}
+.sec-num{font-family:var(--mono);font-size:0.6rem;color:var(--amber);margin-top:0.4rem;white-space:nowrap;}
+.sec-title{font-family:var(--serif);font-size:clamp(1.8rem,3vw,2.6rem);font-weight:700;color:var(--g800);line-height:1.1;}
+.sec-title em{font-style:italic;color:var(--g600);}
 
-/* ── HERO ───────────────────────────────────────────── */
-#hero {
-  min-height: 100vh;
-  padding-top: 48px;
-  position: relative;
-  background: var(--g900);
-  overflow: hidden;
-  display: flex; align-items: center;
-}
+/* ABOUT */
+#about{background:var(--cream);}
+.about-layout{display:grid;grid-template-columns:1fr 1fr;gap:4rem;align-items:start;}
+.about-summary{font-size:1rem;line-height:1.85;color:var(--ink2);margin-bottom:1.5rem;}
+.stats-panel{border:1px solid var(--g200);background:var(--cream2);}
+.stats-panel-header{background:var(--g800);padding:0.5rem 1rem;font-family:var(--mono);font-size:0.58rem;letter-spacing:0.18em;text-transform:uppercase;color:var(--g200);display:flex;align-items:center;gap:0.5rem;}
+.stats-panel-header::before{content:'◉';color:var(--amber);font-size:0.5rem;}
+.stats-grid{display:grid;grid-template-columns:1fr 1fr;}
+.stat-cell{padding:1.2rem 1.5rem;border-right:1px solid var(--g200);border-bottom:1px solid var(--g200);transition:background 0.2s;}
+.stat-cell:nth-child(even){border-right:none;}
+.stat-cell:nth-last-child(-n+2){border-bottom:none;}
+.stat-cell:hover{background:rgba(45,90,45,0.05);}
+.stat-val{font-family:var(--serif);font-size:2rem;font-weight:900;color:var(--g700);line-height:1;}
+.stat-key{font-family:var(--mono);font-size:0.55rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--ink3);margin-top:0.2rem;}
+.key-skills{margin-top:2rem;}
+.key-skills-title{font-family:var(--mono);font-size:0.6rem;letter-spacing:0.18em;text-transform:uppercase;color:var(--g600);margin-bottom:0.75rem;}
+.tag-cloud{display:flex;flex-wrap:wrap;gap:0.4rem;}
+.tag{font-family:var(--mono);font-size:0.6rem;padding:0.25rem 0.65rem;border:1px solid var(--g400);color:var(--g700);transition:all 0.2s;cursor:default;}
+.tag:hover{background:var(--g700);color:var(--cream);border-color:var(--g700);}
 
-/* Map canvas */
-#mapCanvas {
-  position: absolute; inset: 0;
-  width: 100%; height: 100%;
-  pointer-events: none;
-}
+/* EXPERIENCE */
+#experience{background:var(--cream2);}
+.timeline{position:relative;}
+.timeline::before{content:'';position:absolute;left:5.5rem;top:0;bottom:0;width:1px;background:linear-gradient(to bottom,var(--g700),var(--g200),transparent);}
+.tl-item{display:grid;grid-template-columns:5.5rem 1fr;gap:2rem;position:relative;}
+.tl-item+.tl-item{border-top:1px solid var(--g100);}
+.tl-left{padding:1.5rem 0;text-align:right;}
+.tl-year{font-family:var(--mono);font-size:0.6rem;color:var(--amber2);letter-spacing:0.1em;line-height:1.5;}
+.tl-dot{position:absolute;left:calc(5.5rem - 4px);top:1.85rem;width:9px;height:9px;border-radius:50%;background:var(--amber);border:2px solid var(--cream2);box-shadow:0 0 0 3px rgba(212,160,23,0.2);}
+.tl-right{padding:1.5rem 0 1.5rem 2rem;}
+.tl-role{font-family:var(--serif);font-size:1.15rem;font-weight:700;color:var(--g800);margin-bottom:0.15rem;}
+.tl-org{font-family:var(--mono);font-size:0.62rem;letter-spacing:0.1em;color:var(--g600);margin-bottom:0.6rem;}
+.tl-desc{font-size:0.88rem;line-height:1.75;color:var(--ink2);}
 
-/* Grid overlay */
-#hero::before {
-  content: '';
-  position: absolute; inset: 0;
-  background-image:
-    linear-gradient(var(--grid) 1px, transparent 1px),
-    linear-gradient(90deg, var(--grid) 1px, transparent 1px);
-  background-size: 60px 60px;
-  pointer-events: none;
-  z-index: 1;
-}
+/* SKILLS */
+#skills{background:var(--g900);}
+#skills .sec-title{color:var(--cream);}
+#skills .sec-title em{color:var(--g400);}
+#skills .sec-num{color:var(--amber);}
+#skills .sec-header{border-bottom-color:var(--g700);}
+.skills-panels{display:grid;grid-template-columns:repeat(2,1fr);gap:1px;background:var(--g700);border:1px solid var(--g700);}
+.skill-panel{background:var(--g900);transition:background 0.25s;}
+.skill-panel:hover{background:rgba(45,90,45,0.2);}
+.skill-panel-header{padding:0.6rem 1.2rem;background:rgba(45,90,45,0.3);border-bottom:1px solid var(--g700);display:flex;align-items:center;gap:0.6rem;}
+.skill-panel-icon{font-size:0.75rem;opacity:0.8;}
+.skill-panel-title{font-family:var(--mono);font-size:0.58rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--amber);}
+.skill-list{padding:1rem 1.2rem;display:flex;flex-direction:column;gap:0.5rem;}
+.skill-row{display:flex;align-items:center;gap:0.75rem;}
+.skill-row-name{font-family:var(--mono);font-size:0.65rem;color:var(--g100);min-width:110px;}
+.skill-bar-track{flex:1;height:3px;background:rgba(45,90,45,0.3);overflow:hidden;}
+.skill-bar-fill{height:100%;background:linear-gradient(90deg,var(--g600),var(--amber));animation:barLoad 1.2s ease-out forwards;transform-origin:left;}
+@keyframes barLoad{from{transform:scaleX(0);}to{transform:scaleX(1);}}
 
-/* Scanline effect */
-#hero::after {
-  content: '';
-  position: absolute; inset: 0;
-  background: repeating-linear-gradient(
-    0deg,
-    transparent,
-    transparent 2px,
-    rgba(0,0,0,0.03) 2px,
-    rgba(0,0,0,0.03) 4px
-  );
-  pointer-events: none;
-  z-index: 2;
-}
+/* EDUCATION */
+#education{background:var(--cream);}
+.edu-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--g200);border:1px solid var(--g200);margin-bottom:3rem;}
+.edu-card{background:var(--cream);padding:1.5rem;transition:background 0.25s;}
+.edu-card:hover{background:var(--cream2);}
+.edu-card-year{font-family:var(--mono);font-size:0.58rem;color:var(--amber2);letter-spacing:0.15em;margin-bottom:0.5rem;display:flex;align-items:center;gap:0.4rem;}
+.edu-card-year::before{content:'';display:inline-block;width:16px;height:1px;background:var(--amber2);}
+.edu-card-degree{font-family:var(--serif);font-size:0.95rem;font-weight:700;color:var(--g800);line-height:1.3;margin-bottom:0.4rem;}
+.edu-card-school{font-family:var(--mono);font-size:0.58rem;letter-spacing:0.08em;color:var(--ink3);}
+.lang-section{border:1px solid var(--g200);}
+.lang-header{background:var(--g800);padding:0.5rem 1rem;font-family:var(--mono);font-size:0.58rem;letter-spacing:0.18em;text-transform:uppercase;color:var(--g200);}
+.lang-grid{display:grid;grid-template-columns:repeat(3,1fr);}
+.lang-cell{padding:1.5rem;border-right:1px solid var(--g200);text-align:center;transition:background 0.2s;}
+.lang-cell:last-child{border-right:none;}
+.lang-cell:hover{background:var(--cream2);}
+.lang-name{font-family:var(--serif);font-size:1.3rem;font-weight:700;color:var(--g800);margin-bottom:0.25rem;}
+.lang-level{font-family:var(--mono);font-size:0.58rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--g600);}
+.lang-dots{display:flex;justify-content:center;gap:3px;margin-top:0.6rem;}
+.lang-dot{width:6px;height:6px;border-radius:50%;background:var(--g400);}
+.lang-dot.empty{background:var(--g100);border:1px solid var(--g200);}
 
-.hero-content {
-  position: relative; z-index: 10;
-  padding: 4rem 2rem 4rem 3rem;
-  max-width: 640px;
-}
+/* CONTACT */
+#contact{background:var(--g800);padding:5rem 0;}
+#contact .sec-title{color:var(--cream);}
+#contact .sec-title em{color:var(--g400);}
+#contact .sec-num{color:var(--amber);}
+#contact .sec-header{border-bottom-color:var(--g700);}
+.contact-panel{border:1px solid var(--g700);display:grid;grid-template-columns:repeat(3,1fr);}
+.contact-cell{padding:2rem;border-right:1px solid var(--g700);transition:background 0.25s;}
+.contact-cell:last-child{border-right:none;}
+.contact-cell:hover{background:rgba(45,90,45,0.2);}
+.contact-cell .clabel{margin-bottom:0.75rem;}
+.contact-cell a,.contact-cell span{font-family:var(--mono);font-size:0.7rem;color:#fff;transition:color 0.2s;display:block;line-height:1.6;}
+.contact-cell a:hover{color:var(--amber);}
 
-.hero-coords {
-  font-family: var(--mono);
-  font-size: 0.6rem;
-  letter-spacing: 0.15em;
-  color: var(--amber);
-  margin-bottom: 1.5rem;
-  display: flex; gap: 1.5rem;
-}
-.hero-coords span { opacity: 0.8; }
+/* FOOTER */
+footer{background:var(--g900);border-top:1px solid var(--g700);padding:1rem 2rem;display:flex;justify-content:space-between;align-items:center;}
+footer span{font-family:var(--mono);font-size:0.55rem;letter-spacing:0.12em;color:var(--g400);}
 
-.hero-badge {
-  display: inline-flex; align-items: center; gap: 0.5rem;
-  font-family: var(--mono);
-  font-size: 0.58rem;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  color: var(--g200);
-  border: 1px solid var(--g600);
-  padding: 0.3rem 0.8rem;
-  margin-bottom: 1.5rem;
-  background: rgba(45,90,45,0.15);
-}
-.hero-badge::before {
-  content: '';
-  width: 6px; height: 6px;
-  border-radius: 50%;
-  background: var(--g400);
-  flex-shrink: 0;
-}
-
-h1.hero-name {
-  font-family: var(--serif);
-  font-size: clamp(2.8rem, 6vw, 5rem);
-  font-weight: 900;
-  color: #fff;
-  line-height: 1.0;
-  letter-spacing: -0.02em;
-  margin-bottom: 0.5rem;
-}
-h1.hero-name em {
-  font-style: italic;
-  color: var(--g200);
-}
-
-.hero-title {
-  font-family: var(--sans);
-  font-size: clamp(0.9rem, 1.5vw, 1.1rem);
-  font-weight: 300;
-  color: var(--g200);
-  letter-spacing: 0.08em;
-  margin-bottom: 0.75rem;
-}
-
-.hero-rpf {
-  font-family: var(--mono);
-  font-size: 0.65rem;
-  color: var(--amber);
-  letter-spacing: 0.12em;
-  margin-bottom: 2.5rem;
-  padding-left: 0.8rem;
-  border-left: 2px solid var(--amber2);
-}
-
-.hero-contact-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 0;
-  border: 1px solid var(--g700);
-  max-width: 440px;
-}
-.hero-contact-item {
-  padding: 0.75rem 1rem;
-  border-right: 1px solid var(--g700);
-  border-bottom: 1px solid var(--g700);
-}
-.hero-contact-item:nth-child(even) { border-right: none; }
-.hero-contact-item:nth-last-child(-n+2) { border-bottom: none; }
-.hero-contact-item .label { margin-bottom: 0.25rem; }
-.hero-contact-item a,
-.hero-contact-item span {
-  font-family: var(--mono);
-  font-size: 0.65rem;
-  color: #fff;
-  transition: color 0.2s;
-}
-.hero-contact-item a:hover { color: var(--amber); }
-
-/* Compass */
-.hero-compass {
-  position: absolute;
-  right: 3rem; bottom: 3rem;
-  z-index: 10;
-  opacity: 0.7;
-}
-
-/* ── SECTION BASE ───────────────────────────────────── */
-section { padding: 5rem 0; }
-
-.sec-header {
-  display: flex; align-items: flex-start;
-  gap: 1.5rem;
-  margin-bottom: 3rem;
-  padding-bottom: 1rem;
-  border-bottom: 1px solid var(--g200);
-}
-.sec-num {
-  font-family: var(--mono);
-  font-size: 0.6rem;
-  color: var(--amber);
-  margin-top: 0.4rem;
-  white-space: nowrap;
-}
-.sec-title {
-  font-family: var(--serif);
-  font-size: clamp(1.8rem, 3vw, 2.6rem);
-  font-weight: 700;
-  color: var(--g800);
-  line-height: 1.1;
-}
-.sec-title em { font-style: italic; color: var(--g600); }
-
-/* ── ABOUT ──────────────────────────────────────────── */
-#about { background: var(--cream); }
-
-.about-layout {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 4rem;
-  align-items: start;
-}
-
-.about-summary {
-  font-size: 1rem;
-  line-height: 1.85;
-  color: var(--ink2);
-  margin-bottom: 1.5rem;
-}
-
-.stats-panel {
-  border: 1px solid var(--g200);
-  background: var(--cream2);
-}
-.stats-panel-header {
-  background: var(--g800);
-  padding: 0.5rem 1rem;
-  font-family: var(--mono);
-  font-size: 0.58rem;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  color: var(--g200);
-  display: flex; align-items: center; gap: 0.5rem;
-}
-.stats-panel-header::before {
-  content: '◉';
-  color: var(--amber);
-  font-size: 0.5rem;
-}
-.stats-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 0;
-}
-.stat-cell {
-  padding: 1.2rem 1.5rem;
-  border-right: 1px solid var(--g200);
-  border-bottom: 1px solid var(--g200);
-  transition: background 0.2s;
-}
-.stat-cell:nth-child(even) { border-right: none; }
-.stat-cell:nth-last-child(-n+2) { border-bottom: none; }
-.stat-cell:hover { background: rgba(45,90,45,0.05); }
-.stat-val {
-  font-family: var(--serif);
-  font-size: 2rem;
-  font-weight: 900;
-  color: var(--g700);
-  line-height: 1;
-}
-.stat-key {
-  font-family: var(--mono);
-  font-size: 0.55rem;
-  letter-spacing: 0.15em;
-  text-transform: uppercase;
-  color: var(--ink3);
-  margin-top: 0.2rem;
-}
-
-.key-skills {
-  margin-top: 2rem;
-}
-.key-skills-title {
-  font-family: var(--mono);
-  font-size: 0.6rem;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  color: var(--g600);
-  margin-bottom: 0.75rem;
-}
-.tag-cloud { display: flex; flex-wrap: wrap; gap: 0.4rem; }
-.tag {
-  font-family: var(--mono);
-  font-size: 0.6rem;
-  padding: 0.25rem 0.65rem;
-  border: 1px solid var(--g400);
-  color: var(--g700);
-  background: transparent;
-  transition: all 0.2s;
-  cursor: default;
-}
-.tag:hover {
-  background: var(--g700);
-  color: var(--cream);
-  border-color: var(--g700);
-}
-
-/* ── EXPERIENCE ─────────────────────────────────────── */
-#experience { background: var(--cream2); }
-
-.timeline { position: relative; }
-.timeline::before {
-  content: '';
-  position: absolute;
-  left: 5.5rem; top: 0; bottom: 0;
-  width: 1px;
-  background: linear-gradient(to bottom, var(--g700), var(--g200), transparent);
-}
-
-.tl-item {
-  display: grid;
-  grid-template-columns: 5.5rem 1fr;
-  gap: 2rem;
-  margin-bottom: 0;
-  position: relative;
-}
-.tl-item + .tl-item { border-top: 1px solid var(--g100); }
-
-.tl-left {
-  padding: 1.5rem 0;
-  text-align: right;
-}
-.tl-year {
-  font-family: var(--mono);
-  font-size: 0.6rem;
-  color: var(--amber2);
-  letter-spacing: 0.1em;
-  line-height: 1.5;
-}
-
-.tl-dot {
-  position: absolute;
-  left: calc(5.5rem - 4px);
-  top: 1.85rem;
-  width: 9px; height: 9px;
-  border-radius: 50%;
-  background: var(--amber);
-  border: 2px solid var(--cream2);
-  box-shadow: 0 0 0 3px rgba(212,160,23,0.2);
-}
-
-.tl-right {
-  padding: 1.5rem 0 1.5rem 2rem;
-}
-.tl-role {
-  font-family: var(--serif);
-  font-size: 1.15rem;
-  font-weight: 700;
-  color: var(--g800);
-  margin-bottom: 0.15rem;
-}
-.tl-org {
-  font-family: var(--mono);
-  font-size: 0.62rem;
-  letter-spacing: 0.1em;
-  color: var(--g600);
-  margin-bottom: 0.6rem;
-}
-.tl-desc {
-  font-size: 0.88rem;
-  line-height: 1.75;
-  color: var(--ink2);
-}
-
-/* ── SKILLS ─────────────────────────────────────────── */
-#skills { background: var(--g900); }
-#skills .sec-title { color: var(--cream); }
-#skills .sec-title em { color: var(--g400); }
-#skills .sec-num { color: var(--amber); }
-#skills .sec-header { border-bottom-color: var(--g700); }
-
-.skills-panels {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 1px;
-  background: var(--g700);
-  border: 1px solid var(--g700);
-}
-
-.skill-panel {
-  background: var(--g900);
-  padding: 0;
-  transition: background 0.25s;
-}
-.skill-panel:hover { background: rgba(45,90,45,0.2); }
-
-.skill-panel-header {
-  padding: 0.6rem 1.2rem;
-  background: rgba(45,90,45,0.3);
-  border-bottom: 1px solid var(--g700);
-  display: flex; align-items: center; gap: 0.6rem;
-}
-.skill-panel-icon {
-  font-size: 0.75rem;
-  opacity: 0.8;
-}
-.skill-panel-title {
-  font-family: var(--mono);
-  font-size: 0.58rem;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  color: var(--amber);
-}
-
-.skill-list {
-  padding: 1rem 1.2rem;
-  display: flex; flex-direction: column; gap: 0.5rem;
-}
-.skill-row {
-  display: flex; align-items: center; gap: 0.75rem;
-}
-.skill-row-name {
-  font-family: var(--mono);
-  font-size: 0.65rem;
-  color: var(--g100);
-  min-width: 110px;
-}
-.skill-bar-track {
-  flex: 1; height: 3px;
-  background: rgba(45,90,45,0.3);
-  position: relative;
-  overflow: hidden;
-}
-.skill-bar-fill {
-  height: 100%;
-  background: linear-gradient(90deg, var(--g600), var(--amber));
-  animation: barLoad 1.2s ease-out forwards;
-  transform-origin: left;
-}
-@keyframes barLoad {
-  from { transform: scaleX(0); }
-  to { transform: scaleX(1); }
-}
-
-/* ── EDUCATION ──────────────────────────────────────── */
-#education { background: var(--cream); }
-
-.edu-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 1px;
-  background: var(--g200);
-  border: 1px solid var(--g200);
-  margin-bottom: 3rem;
-}
-.edu-card {
-  background: var(--cream);
-  padding: 1.5rem;
-  transition: background 0.25s;
-}
-.edu-card:hover { background: var(--cream2); }
-.edu-card-year {
-  font-family: var(--mono);
-  font-size: 0.58rem;
-  color: var(--amber2);
-  letter-spacing: 0.15em;
-  margin-bottom: 0.5rem;
-  display: flex; align-items: center; gap: 0.4rem;
-}
-.edu-card-year::before {
-  content: '';
-  display: inline-block;
-  width: 16px; height: 1px;
-  background: var(--amber2);
-}
-.edu-card-degree {
-  font-family: var(--serif);
-  font-size: 0.95rem;
-  font-weight: 700;
-  color: var(--g800);
-  line-height: 1.3;
-  margin-bottom: 0.4rem;
-}
-.edu-card-school {
-  font-family: var(--mono);
-  font-size: 0.58rem;
-  letter-spacing: 0.08em;
-  color: var(--ink3);
-}
-
-/* ── LANGUAGES ──────────────────────────────────────── */
-.lang-section {
-  border: 1px solid var(--g200);
-}
-.lang-header {
-  background: var(--g800);
-  padding: 0.5rem 1rem;
-  font-family: var(--mono);
-  font-size: 0.58rem;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  color: var(--g200);
-}
-.lang-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-}
-.lang-cell {
-  padding: 1.5rem;
-  border-right: 1px solid var(--g200);
-  text-align: center;
-  transition: background 0.2s;
-}
-.lang-cell:last-child { border-right: none; }
-.lang-cell:hover { background: var(--cream2); }
-.lang-name {
-  font-family: var(--serif);
-  font-size: 1.3rem;
-  font-weight: 700;
-  color: var(--g800);
-  margin-bottom: 0.25rem;
-}
-.lang-level {
-  font-family: var(--mono);
-  font-size: 0.58rem;
-  letter-spacing: 0.15em;
-  text-transform: uppercase;
-  color: var(--g600);
-}
-.lang-dots {
-  display: flex; justify-content: center; gap: 3px;
-  margin-top: 0.6rem;
-}
-.lang-dot {
-  width: 6px; height: 6px;
-  border-radius: 50%;
-  background: var(--g400);
-}
-.lang-dot.empty { background: var(--g100); border: 1px solid var(--g200); }
-
-/* ── CONTACT ────────────────────────────────────────── */
-#contact {
-  background: var(--g800);
-  padding: 5rem 0;
-}
-#contact .sec-title { color: var(--cream); }
-#contact .sec-title em { color: var(--g400); }
-#contact .sec-num { color: var(--amber); }
-#contact .sec-header { border-bottom-color: var(--g700); }
-
-.contact-panel {
-  border: 1px solid var(--g700);
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-}
-.contact-cell {
-  padding: 2rem;
-  border-right: 1px solid var(--g700);
-  transition: background 0.25s;
-}
-.contact-cell:last-child { border-right: none; }
-.contact-cell:hover { background: rgba(45,90,45,0.2); }
-.contact-cell .label { margin-bottom: 0.75rem; }
-.contact-cell a,
-.contact-cell span {
-  font-family: var(--mono);
-  font-size: 0.7rem;
-  color: #fff;
-  transition: color 0.2s;
-  display: block;
-  line-height: 1.6;
-}
-.contact-cell a:hover { color: var(--amber); }
-
-/* ── FOOTER ─────────────────────────────────────────── */
-footer {
-  background: var(--g900);
-  border-top: 1px solid var(--g700);
-  padding: 1rem 2rem;
-  display: flex; justify-content: space-between; align-items: center;
-}
-footer span {
-  font-family: var(--mono);
-  font-size: 0.55rem;
-  letter-spacing: 0.12em;
-  color: var(--g400);
-}
-
-/* ── RESPONSIVE ─────────────────────────────────────── */
-@media (max-width: 768px) {
-  .nav-links { display: none; }
-  .hero-content { padding: 2rem 1.5rem; }
-  .hero-contact-grid { grid-template-columns: 1fr; max-width: 100%; }
-  .hero-contact-item:nth-child(even) { border-right: 1px solid var(--g700); }
-  .hero-contact-item { border-right: none !important; }
-  .hero-compass { display: none; }
-  .about-layout { grid-template-columns: 1fr; gap: 2rem; }
-  .stats-grid { grid-template-columns: 1fr 1fr; }
-  .timeline::before { left: 0; }
-  .tl-item { grid-template-columns: 1fr; }
-  .tl-left { display: none; }
-  .tl-dot { display: none; }
-  .tl-right { padding: 1.5rem 0; border-top: 1px solid var(--g200); }
-  .skills-panels { grid-template-columns: 1fr; }
-  .edu-grid { grid-template-columns: 1fr; }
-  .lang-grid { grid-template-columns: 1fr; }
-  .lang-cell { border-right: none; border-bottom: 1px solid var(--g200); }
-  .contact-panel { grid-template-columns: 1fr; }
-  .contact-cell { border-right: none; border-bottom: 1px solid var(--g700); }
-  .contact-cell:last-child { border-bottom: none; }
-  footer { flex-direction: column; gap: 0.5rem; text-align: center; }
+/* RESPONSIVE */
+@media(max-width:768px){
+  .nav-center{display:none;}
+  .nav-id{font-size:0.5rem;}
+  .hero-content{padding:2rem 1.5rem;}
+  .hero-contact-grid{grid-template-columns:1fr;max-width:100%;}
+  .hero-contact-item{border-right:none!important;}
+  .hero-compass{display:none;}
+  .about-layout{grid-template-columns:1fr;gap:2rem;}
+  .timeline::before{left:0;}
+  .tl-item{grid-template-columns:1fr;}
+  .tl-left,.tl-dot{display:none;}
+  .tl-right{padding:1.5rem 0;}
+  .skills-panels{grid-template-columns:1fr;}
+  .edu-grid{grid-template-columns:1fr;}
+  .lang-grid{grid-template-columns:1fr;}
+  .lang-cell{border-right:none;border-bottom:1px solid var(--g200);}
+  .contact-panel{grid-template-columns:1fr;}
+  .contact-cell{border-right:none;border-bottom:1px solid var(--g700);}
+  footer{flex-direction:column;gap:0.5rem;text-align:center;}
 }
 </style>
 </head>
 <body>
 
-<!-- ── NAV ── -->
 <nav>
   <div class="nav-id">IVAN M. ADARME · RPF-IN-TRAINING #3081</div>
-  <ul class="nav-links">
-    <li><a href="#about">PROFILE</a></li>
-    <li><a href="#experience">EXPERIENCE</a></li>
-    <li><a href="#skills">SKILLS</a></li>
-    <li><a href="#education">EDUCATION</a></li>
-    <li><a href="#contact">CONTACT</a></li>
+  <ul class="nav-center">
+    <li><a href="#about"      data-i18n="nav.profile">PROFILE</a></li>
+    <li><a href="#experience" data-i18n="nav.experience">EXPERIENCE</a></li>
+    <li><a href="#skills"     data-i18n="nav.skills">SKILLS</a></li>
+    <li><a href="#education"  data-i18n="nav.education">EDUCATION</a></li>
+    <li><a href="#contact"    data-i18n="nav.contact">CONTACT</a></li>
   </ul>
+  <div class="lang-switcher">
+    <button class="lang-btn active" onclick="setLang('en')">EN</button>
+    <button class="lang-btn"        onclick="setLang('es')">ES</button>
+    <button class="lang-btn"        onclick="setLang('fr')">FR</button>
+  </div>
 </nav>
 
-<!-- ── HERO ── -->
 <section id="hero">
   <canvas id="mapCanvas"></canvas>
-
   <div class="hero-content">
-    <div class="hero-coords">
-      <span>LAT 43.6532° N</span>
-      <span>LON 79.3832° W</span>
-      <span>ONTARIO, CA</span>
-    </div>
-
-    <div class="hero-badge">GIS SPECIALIST · FORESTRY ENGINEER</div>
-
+    <div class="hero-coords"><span>LAT 43.6532° N</span><span>LON 79.3832° W</span><span>ONTARIO, CA</span></div>
+    <div class="hero-badge" data-i18n="hero.badge">GIS SPECIALIST · FORESTRY ENGINEER</div>
     <h1 class="hero-name">Ivan<br><em>Mauricio</em><br>Adarme</h1>
-
-    <p class="hero-title">Forestry Engineer & GIS Specialist</p>
+    <p class="hero-title" data-i18n="hero.title">Forestry Engineer &amp; GIS Specialist</p>
     <p class="hero-rpf">R.P.F. IN TRAINING · REG. #3081 · OPFA</p>
-
     <div class="hero-contact-grid">
-      <div class="hero-contact-item">
-        <div class="label">Email</div>
-        <a href="mailto:ivanmauricioadarme@gmail.com">ivanmauricioadarme@gmail.com</a>
-      </div>
-      <div class="hero-contact-item">
-        <div class="label">Phone</div>
-        <a href="tel:+14379743091">+1 437-974-3091</a>
-      </div>
-      <div class="hero-contact-item">
-        <div class="label">LinkedIn</div>
-        <a href="https://linkedin.com/in/ivan-mauricio-adarme-72276616" target="_blank">ivan-mauricio-adarme</a>
-      </div>
-      <div class="hero-contact-item">
-        <div class="label">Licence</div>
-        <span>Ontario BZ Driver's</span>
-      </div>
+      <div class="hero-contact-item"><div class="clabel" data-i18n="contact.email">Email</div><a href="mailto:ivanmauricioadarme@gmail.com">ivanmauricioadarme@gmail.com</a></div>
+      <div class="hero-contact-item"><div class="clabel" data-i18n="contact.phone">Phone</div><a href="tel:+14379743091">+1 437-974-3091</a></div>
+      <div class="hero-contact-item"><div class="clabel">LinkedIn</div><a href="https://linkedin.com/in/ivan-mauricio-adarme-72276616" target="_blank">ivan-mauricio-adarme</a></div>
+      <div class="hero-contact-item"><div class="clabel" data-i18n="contact.licence">Licence</div><span data-i18n="contact.licenceVal">Ontario BZ Driver's</span></div>
     </div>
   </div>
-
-  <!-- Compass rose SVG -->
   <div class="hero-compass">
     <svg width="80" height="80" viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg">
       <circle cx="40" cy="40" r="36" fill="none" stroke="rgba(45,90,45,0.5)" stroke-width="1"/>
@@ -729,40 +221,31 @@ footer span {
       <polygon points="72,40 44,36 40,40 44,44" fill="rgba(100,170,100,0.6)"/>
       <text x="40" y="5" text-anchor="middle" font-family="'IBM Plex Mono',monospace" font-size="7" fill="#d4a017">N</text>
       <text x="40" y="78" text-anchor="middle" font-family="'IBM Plex Mono',monospace" font-size="6" fill="rgba(100,170,100,0.7)">S</text>
-      <text x="4" y="43" text-anchor="middle" font-family="'IBM Plex Mono',monospace" font-size="6" fill="rgba(100,170,100,0.7)">W</text>
+      <text x="4"  y="43" text-anchor="middle" font-family="'IBM Plex Mono',monospace" font-size="6" fill="rgba(100,170,100,0.7)">W</text>
       <text x="76" y="43" text-anchor="middle" font-family="'IBM Plex Mono',monospace" font-size="6" fill="rgba(100,170,100,0.7)">E</text>
       <circle cx="40" cy="40" r="3" fill="#d4a017"/>
     </svg>
   </div>
 </section>
 
-<!-- ── ABOUT ── -->
 <section id="about">
   <div class="container">
-    <div class="sec-header">
-      <span class="sec-num">[ 01 ]</span>
-      <h2 class="sec-title">Professional <em>Profile</em></h2>
-    </div>
+    <div class="sec-header"><span class="sec-num">[ 01 ]</span><h2 class="sec-title" data-i18n="about.title">Professional <em>Profile</em></h2></div>
     <div class="about-layout">
       <div>
-        <p class="about-summary">Forestry Engineer with extensive experience in GIS, spatial data management, and environmental analysis. Skilled in developing cartographic products, performing spatial analysis, and maintaining geospatial datasets using ArcGIS Pro and QGIS.</p>
-        <p class="about-summary">Experienced in environmental impact assessments, forest inventory, and land stewardship initiatives across Colombia and Canada. Detail-oriented professional committed to the conservation of Ontario's natural landscapes and biodiversity.</p>
-        <p class="about-summary">Currently registered as R.P.F. in Training (#3081) with the Ontario Professional Foresters Association and volunteering with Ontario Nature.</p>
+        <p class="about-summary" data-i18n="about.p1">Forestry Engineer with extensive experience in GIS, spatial data management, and environmental analysis. Skilled in developing cartographic products, performing spatial analysis, and maintaining geospatial datasets using ArcGIS Pro and QGIS.</p>
+        <p class="about-summary" data-i18n="about.p2">Experienced in environmental impact assessments, forest inventory, and land stewardship initiatives across Colombia and Canada. Detail-oriented professional committed to the conservation of Ontario's natural landscapes and biodiversity.</p>
+        <p class="about-summary" data-i18n="about.p3">Currently registered as R.P.F. in Training (#3081) with the Ontario Professional Foresters Association and volunteering with Ontario Nature.</p>
         <div class="key-skills">
-          <div class="key-skills-title">// Core competencies</div>
+          <div class="key-skills-title" data-i18n="about.competencies">// Core competencies</div>
           <div class="tag-cloud">
-            <span class="tag">ArcGIS Pro</span>
-            <span class="tag">QGIS</span>
-            <span class="tag">Spatial Analysis</span>
-            <span class="tag">Forest Inventory</span>
-            <span class="tag">EIA</span>
-            <span class="tag">RPAS / Drone</span>
-            <span class="tag">RTK Survey</span>
-            <span class="tag">SQL</span>
-            <span class="tag">KML / GPS</span>
-            <span class="tag">Pix4D</span>
-            <span class="tag">Agisoft</span>
-            <span class="tag">Avenza Maps</span>
+            <span class="tag">ArcGIS Pro</span><span class="tag">QGIS</span>
+            <span class="tag" data-i18n="tag.spatial">Spatial Analysis</span>
+            <span class="tag" data-i18n="tag.inventory">Forest Inventory</span>
+            <span class="tag">EIA</span><span class="tag">RPAS / Drone</span>
+            <span class="tag">RTK Survey</span><span class="tag">SQL</span>
+            <span class="tag">KML / GPS</span><span class="tag">Pix4D</span>
+            <span class="tag">Agisoft</span><span class="tag">Avenza Maps</span>
           </div>
         </div>
       </div>
@@ -770,30 +253,12 @@ footer span {
         <div class="stats-panel">
           <div class="stats-panel-header">LAYER: career_metrics.shp</div>
           <div class="stats-grid">
-            <div class="stat-cell">
-              <div class="stat-val">12+</div>
-              <div class="stat-key">Years field experience</div>
-            </div>
-            <div class="stat-cell">
-              <div class="stat-val">3</div>
-              <div class="stat-key">Languages spoken</div>
-            </div>
-            <div class="stat-cell">
-              <div class="stat-val">4</div>
-              <div class="stat-key">Postgrad diplomas</div>
-            </div>
-            <div class="stat-cell">
-              <div class="stat-val">BZ</div>
-              <div class="stat-key">Ontario licence class</div>
-            </div>
-            <div class="stat-cell">
-              <div class="stat-val">10+</div>
-              <div class="stat-key">Employers & projects</div>
-            </div>
-            <div class="stat-cell">
-              <div class="stat-val">RPF</div>
-              <div class="stat-key">In training — OPFA #3081</div>
-            </div>
+            <div class="stat-cell"><div class="stat-val">12+</div><div class="stat-key" data-i18n="stat.exp">Years field experience</div></div>
+            <div class="stat-cell"><div class="stat-val">3</div><div class="stat-key" data-i18n="stat.lang">Languages spoken</div></div>
+            <div class="stat-cell"><div class="stat-val">4</div><div class="stat-key" data-i18n="stat.diplomas">Postgrad diplomas</div></div>
+            <div class="stat-cell"><div class="stat-val">BZ</div><div class="stat-key" data-i18n="stat.licence">Ontario licence class</div></div>
+            <div class="stat-cell"><div class="stat-val">10+</div><div class="stat-key" data-i18n="stat.projects">Employers &amp; projects</div></div>
+            <div class="stat-cell"><div class="stat-val">RPF</div><div class="stat-key" data-i18n="stat.rpf">In training — OPFA #3081</div></div>
           </div>
         </div>
       </div>
@@ -801,556 +266,246 @@ footer span {
   </div>
 </section>
 
-<!-- ── EXPERIENCE ── -->
 <section id="experience">
   <div class="container">
-    <div class="sec-header">
-      <span class="sec-num">[ 02 ]</span>
-      <h2 class="sec-title">Work <em>Experience</em></h2>
-    </div>
+    <div class="sec-header"><span class="sec-num">[ 02 ]</span><h2 class="sec-title" data-i18n="exp.title">Work <em>Experience</em></h2></div>
     <div class="timeline">
-
-      <div class="tl-item">
-        <div class="tl-left"><div class="tl-year">2025<br>Present</div></div>
-        <div class="tl-dot"></div>
-        <div class="tl-right">
-          <div class="tl-role">Bus Driver</div>
-          <div class="tl-org">METROLINX · North York, ON</div>
-          <div class="tl-desc">Safe and reliable transportation services with strong attention to detail. Full compliance with Ontario traffic regulations and courteous public service delivery.</div>
-        </div>
-      </div>
-
-      <div class="tl-item">
-        <div class="tl-left"><div class="tl-year">2024<br>2025</div></div>
-        <div class="tl-dot"></div>
-        <div class="tl-right">
-          <div class="tl-role">Transit Operator</div>
-          <div class="tl-org">MILLER TRANSIT · Richmond Hill, ON</div>
-          <div class="tl-desc">Daily pre-trip inspections ensuring optimal transit bus performance and passenger safety. Courteous and reliable vehicle operation.</div>
-        </div>
-      </div>
-
-      <div class="tl-item">
-        <div class="tl-left"><div class="tl-year">2023<br>2024</div></div>
-        <div class="tl-dot"></div>
-        <div class="tl-right">
-          <div class="tl-role">School Bus Driver</div>
-          <div class="tl-org">WHEELCHAIR ACCESSIBLE TRANSIT · North York, ON</div>
-          <div class="tl-desc">Ensuring student safety and optimal bus performance on daily routes. Pre-trip inspections and responsible accessible transit service.</div>
-        </div>
-      </div>
-
-      <div class="tl-item">
-        <div class="tl-left"><div class="tl-year">2019<br>2022</div></div>
-        <div class="tl-dot"></div>
-        <div class="tl-right">
-          <div class="tl-role">Advanced Professional B</div>
-          <div class="tl-org">SGI SAS · Colombia</div>
-          <div class="tl-desc">Implementation of the Environmental Recovery Plan in LISAMA 158. Conducted forest inventories and vegetation characterization across diverse ecosystems. Active participation in reforestation and ecosystem restoration initiatives.</div>
-        </div>
-      </div>
-
-      <div class="tl-item">
-        <div class="tl-left"><div class="tl-year">2018</div></div>
-        <div class="tl-dot"></div>
-        <div class="tl-right">
-          <div class="tl-role">Project Professional II</div>
-          <div class="tl-org">INERCO CONSULTING COLOMBIA</div>
-          <div class="tl-desc">Field coordinator for the Forest Compensation Plan data collection. Authored the Flora chapter — including forest structural analysis and GeoDatabase — for the Environmental Impact Assessment of the Loop 10" gas pipeline (Mariquita–Gualanday, TGI Colombia).</div>
-        </div>
-      </div>
-
-      <div class="tl-item">
-        <div class="tl-left"><div class="tl-year">2017<br>2018</div></div>
-        <div class="tl-dot"></div>
-        <div class="tl-right">
-          <div class="tl-role">Support Engineer</div>
-          <div class="tl-org">CONCOL BY WSP · Colombia</div>
-          <div class="tl-desc">Authored Environmental and Forest Management Plans. Led field operations and logistics for forest inventories. Maintained structured datasets; performed data entry, validation and file organization to ensure data integrity.</div>
-        </div>
-      </div>
-
-      <div class="tl-item">
-        <div class="tl-left"><div class="tl-year">2017</div></div>
-        <div class="tl-dot"></div>
-        <div class="tl-right">
-          <div class="tl-role">External Consultant — Resident Forestry Engineer</div>
-          <div class="tl-org">ECOLOKYE SAS · Antioquia, Colombia</div>
-          <div class="tl-desc">Forestry offsetting and silvicultural management in El Chocho project, Segovia Municipality. Environmental compliance monitoring and reporting.</div>
-        </div>
-      </div>
-
-      <div class="tl-item">
-        <div class="tl-left"><div class="tl-year">2017</div></div>
-        <div class="tl-dot"></div>
-        <div class="tl-right">
-          <div class="tl-role">Resident Forestry Engineer</div>
-          <div class="tl-org">WSP COLOMBIA SAS</div>
-          <div class="tl-desc">Auditing the construction of the electric transmission line and electrical substation of Casabe. Collaborated on GIS and database troubleshooting with technical teams.</div>
-        </div>
-      </div>
-
-      <div class="tl-item">
-        <div class="tl-left"><div class="tl-year">2015</div></div>
-        <div class="tl-dot"></div>
-        <div class="tl-right">
-          <div class="tl-role">Forestry Engineer — Geographic Data Collection</div>
-          <div class="tl-org">ENTREPRENEURS COLOMBIA SAS · Amazonas & Caquetá</div>
-          <div class="tl-desc">Collection of geographic information in areas of Amazonas and Caquetá Provinces, Colombia.</div>
-        </div>
-      </div>
-
-      <div class="tl-item">
-        <div class="tl-left"><div class="tl-year">2014</div></div>
-        <div class="tl-dot"></div>
-        <div class="tl-right">
-          <div class="tl-role">Junior Professional</div>
-          <div class="tl-org">CEI-SMA CONSORTIUM · Ecopetrol S.A.</div>
-          <div class="tl-desc">Forest inventory and auditing of forest harvesting procedures in oil fields of Ecopetrol S.A.</div>
-        </div>
-      </div>
-
-      <div class="tl-item">
-        <div class="tl-left"><div class="tl-year">2013<br>2014</div></div>
-        <div class="tl-dot"></div>
-        <div class="tl-right">
-          <div class="tl-role">MEG Field Monitor</div>
-          <div class="tl-org">UNITED NATIONS — UNODC · Colombia</div>
-          <div class="tl-desc">On-field monitoring of illicit crop eradication operations. Prepared and submitted technical compliance reports to the government of Colombia.</div>
-        </div>
-      </div>
-
-      <div class="tl-item">
-        <div class="tl-left"><div class="tl-year">2012<br>2013</div></div>
-        <div class="tl-dot"></div>
-        <div class="tl-right">
-          <div class="tl-role">Forestry Engineer</div>
-          <div class="tl-org">ANGELGOLD MINING CO. SAS · Antioquia, Colombia</div>
-          <div class="tl-desc">Forest inventory and reforestation of La Honda river protection areas with native species. Data documentation and guidance for consistent dataset use.</div>
-        </div>
-      </div>
-
-      <div class="tl-item">
-        <div class="tl-left"><div class="tl-year">2011<br>2012</div></div>
-        <div class="tl-dot"></div>
-        <div class="tl-right">
-          <div class="tl-role">Forestry Engineer — Environmental Impact</div>
-          <div class="tl-org">ELÉCTRICAS DE MEDELLÍN S.A.</div>
-          <div class="tl-desc">Management of environmental impacts during power line construction. Forest inventory and supervision of forest harvesting procedures.</div>
-        </div>
-      </div>
-
+      <div class="tl-item"><div class="tl-left"><div class="tl-year">2025<br><span data-i18n="exp.present">Present</span></div></div><div class="tl-dot"></div><div class="tl-right"><div class="tl-role" data-i18n="job1.role">Bus Driver</div><div class="tl-org">METROLINX · North York, ON</div><div class="tl-desc" data-i18n="job1.desc">Safe and reliable transportation services with strong attention to detail. Full compliance with Ontario traffic regulations and courteous public service delivery.</div></div></div>
+      <div class="tl-item"><div class="tl-left"><div class="tl-year">2024–2025</div></div><div class="tl-dot"></div><div class="tl-right"><div class="tl-role" data-i18n="job2.role">Transit Operator</div><div class="tl-org">MILLER TRANSIT · Richmond Hill, ON</div><div class="tl-desc" data-i18n="job2.desc">Daily pre-trip inspections ensuring optimal transit bus performance and passenger safety. Courteous and reliable vehicle operation.</div></div></div>
+      <div class="tl-item"><div class="tl-left"><div class="tl-year">2023–2024</div></div><div class="tl-dot"></div><div class="tl-right"><div class="tl-role" data-i18n="job3.role">School Bus Driver</div><div class="tl-org">WHEELCHAIR ACCESSIBLE TRANSIT · North York, ON</div><div class="tl-desc" data-i18n="job3.desc">Ensuring student safety and optimal bus performance on daily routes. Pre-trip inspections and responsible accessible transit service.</div></div></div>
+      <div class="tl-item"><div class="tl-left"><div class="tl-year">2019–2022</div></div><div class="tl-dot"></div><div class="tl-right"><div class="tl-role" data-i18n="job4.role">Advanced Professional B</div><div class="tl-org">SGI SAS · Colombia</div><div class="tl-desc" data-i18n="job4.desc">Implementation of the Environmental Recovery Plan in LISAMA 158. Forest inventories and vegetation characterization across diverse ecosystems. Reforestation and ecosystem restoration initiatives.</div></div></div>
+      <div class="tl-item"><div class="tl-left"><div class="tl-year">2018</div></div><div class="tl-dot"></div><div class="tl-right"><div class="tl-role" data-i18n="job5.role">Project Professional II</div><div class="tl-org">INERCO CONSULTING COLOMBIA</div><div class="tl-desc" data-i18n="job5.desc">Field coordinator for the Forest Compensation Plan. Authored the Flora chapter — including forest structural analysis and GeoDatabase — for the EIA of the Loop 10" gas pipeline (Mariquita–Gualanday, TGI Colombia).</div></div></div>
+      <div class="tl-item"><div class="tl-left"><div class="tl-year">2017–2018</div></div><div class="tl-dot"></div><div class="tl-right"><div class="tl-role" data-i18n="job6.role">Support Engineer</div><div class="tl-org">CONCOL BY WSP · Colombia</div><div class="tl-desc" data-i18n="job6.desc">Authored Environmental and Forest Management Plans. Led field operations and logistics for forest inventories. Maintained structured datasets; data entry, validation and file organization.</div></div></div>
+      <div class="tl-item"><div class="tl-left"><div class="tl-year">2017</div></div><div class="tl-dot"></div><div class="tl-right"><div class="tl-role" data-i18n="job7.role">External Consultant — Resident Forestry Engineer</div><div class="tl-org">ECOLOKYE SAS · Antioquia, Colombia</div><div class="tl-desc" data-i18n="job7.desc">Forestry offsetting and silvicultural management in El Chocho project, Segovia. Environmental compliance monitoring and reporting.</div></div></div>
+      <div class="tl-item"><div class="tl-left"><div class="tl-year">2013–2014</div></div><div class="tl-dot"></div><div class="tl-right"><div class="tl-role" data-i18n="job8.role">MEG Field Monitor</div><div class="tl-org">UNITED NATIONS — UNODC · Colombia</div><div class="tl-desc" data-i18n="job8.desc">On-field monitoring of illicit crop eradication operations. Prepared and submitted technical compliance reports to the government of Colombia.</div></div></div>
+      <div class="tl-item"><div class="tl-left"><div class="tl-year">2012–2013</div></div><div class="tl-dot"></div><div class="tl-right"><div class="tl-role" data-i18n="job9.role">Forestry Engineer</div><div class="tl-org">ANGELGOLD MINING CO. SAS · Antioquia, Colombia</div><div class="tl-desc" data-i18n="job9.desc">Forest inventory and reforestation of La Honda river protection areas with native species. Data documentation and guidance for consistent dataset use.</div></div></div>
+      <div class="tl-item"><div class="tl-left"><div class="tl-year">2011–2012</div></div><div class="tl-dot"></div><div class="tl-right"><div class="tl-role" data-i18n="job10.role">Forestry Engineer — Environmental Impact</div><div class="tl-org">ELÉCTRICAS DE MEDELLÍN S.A.</div><div class="tl-desc" data-i18n="job10.desc">Management of environmental impacts during power line construction. Forest inventory and supervision of forest harvesting procedures.</div></div></div>
     </div>
   </div>
 </section>
 
-<!-- ── SKILLS ── -->
 <section id="skills">
   <div class="container">
-    <div class="sec-header">
-      <span class="sec-num">[ 03 ]</span>
-      <h2 class="sec-title">Technical <em>Skills</em></h2>
-    </div>
+    <div class="sec-header"><span class="sec-num">[ 03 ]</span><h2 class="sec-title" data-i18n="skills.title">Technical <em>Skills</em></h2></div>
     <div class="skills-panels">
-
-      <div class="skill-panel">
-        <div class="skill-panel-header">
-          <span class="skill-panel-icon">🗺</span>
-          <span class="skill-panel-title">GIS & Spatial Tools</span>
-        </div>
-        <div class="skill-list">
-          <div class="skill-row">
-            <span class="skill-row-name">ArcGIS Pro</span>
-            <div class="skill-bar-track"><div class="skill-bar-fill" style="width:92%"></div></div>
-          </div>
-          <div class="skill-row">
-            <span class="skill-row-name">QGIS</span>
-            <div class="skill-bar-track"><div class="skill-bar-fill" style="width:88%"></div></div>
-          </div>
-          <div class="skill-row">
-            <span class="skill-row-name">Pix4D</span>
-            <div class="skill-bar-track"><div class="skill-bar-fill" style="width:78%"></div></div>
-          </div>
-          <div class="skill-row">
-            <span class="skill-row-name">Agisoft</span>
-            <div class="skill-bar-track"><div class="skill-bar-fill" style="width:75%"></div></div>
-          </div>
-          <div class="skill-row">
-            <span class="skill-row-name">Avenza Maps</span>
-            <div class="skill-bar-track"><div class="skill-bar-fill" style="width:85%"></div></div>
-          </div>
-        </div>
-      </div>
-
-      <div class="skill-panel">
-        <div class="skill-panel-header">
-          <span class="skill-panel-icon">📊</span>
-          <span class="skill-panel-title">Data & Database</span>
-        </div>
-        <div class="skill-list">
-          <div class="skill-row">
-            <span class="skill-row-name">SQL</span>
-            <div class="skill-bar-track"><div class="skill-bar-fill" style="width:72%"></div></div>
-          </div>
-          <div class="skill-row">
-            <span class="skill-row-name">MS Access</span>
-            <div class="skill-bar-track"><div class="skill-bar-fill" style="width:80%"></div></div>
-          </div>
-          <div class="skill-row">
-            <span class="skill-row-name">Metadata Mgmt</span>
-            <div class="skill-bar-track"><div class="skill-bar-fill" style="width:90%"></div></div>
-          </div>
-          <div class="skill-row">
-            <span class="skill-row-name">QA / QC</span>
-            <div class="skill-bar-track"><div class="skill-bar-fill" style="width:88%"></div></div>
-          </div>
-          <div class="skill-row">
-            <span class="skill-row-name">GeoDatabase</span>
-            <div class="skill-bar-track"><div class="skill-bar-fill" style="width:85%"></div></div>
-          </div>
-        </div>
-      </div>
-
-      <div class="skill-panel">
-        <div class="skill-panel-header">
-          <span class="skill-panel-icon">🛸</span>
-          <span class="skill-panel-title">Field & Remote Sensing</span>
-        </div>
-        <div class="skill-list">
-          <div class="skill-row">
-            <span class="skill-row-name">GPS / KML</span>
-            <div class="skill-bar-track"><div class="skill-bar-fill" style="width:92%"></div></div>
-          </div>
-          <div class="skill-row">
-            <span class="skill-row-name">RPAS / Drone</span>
-            <div class="skill-bar-track"><div class="skill-bar-fill" style="width:82%"></div></div>
-          </div>
-          <div class="skill-row">
-            <span class="skill-row-name">RTK Surveying</span>
-            <div class="skill-bar-track"><div class="skill-bar-fill" style="width:78%"></div></div>
-          </div>
-          <div class="skill-row">
-            <span class="skill-row-name">Remote Imagery</span>
-            <div class="skill-bar-track"><div class="skill-bar-fill" style="width:80%"></div></div>
-          </div>
-        </div>
-      </div>
-
-      <div class="skill-panel">
-        <div class="skill-panel-header">
-          <span class="skill-panel-icon">🌲</span>
-          <span class="skill-panel-title">Forestry & Environment</span>
-        </div>
-        <div class="skill-list">
-          <div class="skill-row">
-            <span class="skill-row-name">Forest Inventory</span>
-            <div class="skill-bar-track"><div class="skill-bar-fill" style="width:95%"></div></div>
-          </div>
-          <div class="skill-row">
-            <span class="skill-row-name">EIA / EMP</span>
-            <div class="skill-bar-track"><div class="skill-bar-fill" style="width:90%"></div></div>
-          </div>
-          <div class="skill-row">
-            <span class="skill-row-name">Reforestation</span>
-            <div class="skill-bar-track"><div class="skill-bar-fill" style="width:88%"></div></div>
-          </div>
-          <div class="skill-row">
-            <span class="skill-row-name">Cartography</span>
-            <div class="skill-bar-track"><div class="skill-bar-fill" style="width:85%"></div></div>
-          </div>
-          <div class="skill-row">
-            <span class="skill-row-name">Ecosystem Restore</span>
-            <div class="skill-bar-track"><div class="skill-bar-fill" style="width:87%"></div></div>
-          </div>
-        </div>
-      </div>
-
+      <div class="skill-panel"><div class="skill-panel-header"><span class="skill-panel-icon">🗺</span><span class="skill-panel-title" data-i18n="skills.gis">GIS &amp; Spatial Tools</span></div><div class="skill-list"><div class="skill-row"><span class="skill-row-name">ArcGIS Pro</span><div class="skill-bar-track"><div class="skill-bar-fill" style="width:92%"></div></div></div><div class="skill-row"><span class="skill-row-name">QGIS</span><div class="skill-bar-track"><div class="skill-bar-fill" style="width:88%"></div></div></div><div class="skill-row"><span class="skill-row-name">Pix4D</span><div class="skill-bar-track"><div class="skill-bar-fill" style="width:78%"></div></div></div><div class="skill-row"><span class="skill-row-name">Agisoft</span><div class="skill-bar-track"><div class="skill-bar-fill" style="width:75%"></div></div></div><div class="skill-row"><span class="skill-row-name">Avenza Maps</span><div class="skill-bar-track"><div class="skill-bar-fill" style="width:85%"></div></div></div></div></div>
+      <div class="skill-panel"><div class="skill-panel-header"><span class="skill-panel-icon">📊</span><span class="skill-panel-title" data-i18n="skills.data">Data &amp; Database</span></div><div class="skill-list"><div class="skill-row"><span class="skill-row-name">SQL</span><div class="skill-bar-track"><div class="skill-bar-fill" style="width:72%"></div></div></div><div class="skill-row"><span class="skill-row-name">MS Access</span><div class="skill-bar-track"><div class="skill-bar-fill" style="width:80%"></div></div></div><div class="skill-row"><span class="skill-row-name">Metadata Mgmt</span><div class="skill-bar-track"><div class="skill-bar-fill" style="width:90%"></div></div></div><div class="skill-row"><span class="skill-row-name">QA / QC</span><div class="skill-bar-track"><div class="skill-bar-fill" style="width:88%"></div></div></div><div class="skill-row"><span class="skill-row-name">GeoDatabase</span><div class="skill-bar-track"><div class="skill-bar-fill" style="width:85%"></div></div></div></div></div>
+      <div class="skill-panel"><div class="skill-panel-header"><span class="skill-panel-icon">🛸</span><span class="skill-panel-title" data-i18n="skills.field">Field &amp; Remote Sensing</span></div><div class="skill-list"><div class="skill-row"><span class="skill-row-name">GPS / KML</span><div class="skill-bar-track"><div class="skill-bar-fill" style="width:92%"></div></div></div><div class="skill-row"><span class="skill-row-name">RPAS / Drone</span><div class="skill-bar-track"><div class="skill-bar-fill" style="width:82%"></div></div></div><div class="skill-row"><span class="skill-row-name">RTK Surveying</span><div class="skill-bar-track"><div class="skill-bar-fill" style="width:78%"></div></div></div><div class="skill-row"><span class="skill-row-name">Remote Imagery</span><div class="skill-bar-track"><div class="skill-bar-fill" style="width:80%"></div></div></div></div></div>
+      <div class="skill-panel"><div class="skill-panel-header"><span class="skill-panel-icon">🌲</span><span class="skill-panel-title" data-i18n="skills.forestry">Forestry &amp; Environment</span></div><div class="skill-list"><div class="skill-row"><span class="skill-row-name" data-i18n="skills.fi">Forest Inventory</span><div class="skill-bar-track"><div class="skill-bar-fill" style="width:95%"></div></div></div><div class="skill-row"><span class="skill-row-name">EIA / EMP</span><div class="skill-bar-track"><div class="skill-bar-fill" style="width:90%"></div></div></div><div class="skill-row"><span class="skill-row-name" data-i18n="skills.reforest">Reforestation</span><div class="skill-bar-track"><div class="skill-bar-fill" style="width:88%"></div></div></div><div class="skill-row"><span class="skill-row-name" data-i18n="skills.carto">Cartography</span><div class="skill-bar-track"><div class="skill-bar-fill" style="width:85%"></div></div></div><div class="skill-row"><span class="skill-row-name" data-i18n="skills.eco">Ecosystem Restore</span><div class="skill-bar-track"><div class="skill-bar-fill" style="width:87%"></div></div></div></div></div>
     </div>
   </div>
 </section>
 
-<!-- ── EDUCATION ── -->
 <section id="education">
   <div class="container">
-    <div class="sec-header">
-      <span class="sec-num">[ 04 ]</span>
-      <h2 class="sec-title">Education &amp; <em>Certifications</em></h2>
-    </div>
-
+    <div class="sec-header"><span class="sec-num">[ 04 ]</span><h2 class="sec-title" data-i18n="edu.title">Education &amp; <em>Certifications</em></h2></div>
     <div class="edu-grid">
-      <div class="edu-card">
-        <div class="edu-card-year">2023</div>
-        <div class="edu-card-degree">Postgraduate Diploma — Remotely Piloted Aerial Systems (RPAS)</div>
-        <div class="edu-card-school">Fanshawe College · London, Canada</div>
-      </div>
-      <div class="edu-card">
-        <div class="edu-card-year">2022</div>
-        <div class="edu-card-degree">Postgraduate Diploma — Project Management (Environmental)</div>
-        <div class="edu-card-school">Seneca College · Toronto, Canada</div>
-      </div>
-      <div class="edu-card">
-        <div class="edu-card-year">2021</div>
-        <div class="edu-card-degree">Postgraduate Diploma — Social & Solidarity Economy Organizations</div>
-        <div class="edu-card-school">Javeriana University · Bogotá, Colombia</div>
-      </div>
-      <div class="edu-card">
-        <div class="edu-card-year">2019</div>
-        <div class="edu-card-degree">Master's — Safety, Environment & Enterprise Social Responsibility</div>
-        <div class="edu-card-school">Camilo José Cela University · Madrid, Spain</div>
-      </div>
-      <div class="edu-card">
-        <div class="edu-card-year">2007</div>
-        <div class="edu-card-degree">Forestry Engineer — Bachelor's Degree</div>
-        <div class="edu-card-school">Universidad Industrial de Santander · Bucaramanga, Colombia</div>
-      </div>
+      <div class="edu-card"><div class="edu-card-year">2023</div><div class="edu-card-degree" data-i18n="edu.d1">Postgraduate Diploma — Remotely Piloted Aerial Systems (RPAS)</div><div class="edu-card-school">Fanshawe College · London, Canada</div></div>
+      <div class="edu-card"><div class="edu-card-year">2022</div><div class="edu-card-degree" data-i18n="edu.d2">Postgraduate Diploma — Project Management (Environmental)</div><div class="edu-card-school">Seneca College · Toronto, Canada</div></div>
+      <div class="edu-card"><div class="edu-card-year">2021</div><div class="edu-card-degree" data-i18n="edu.d3">Postgraduate Diploma — Social &amp; Solidarity Economy Organizations</div><div class="edu-card-school">Javeriana University · Bogotá, Colombia</div></div>
+      <div class="edu-card"><div class="edu-card-year">2019</div><div class="edu-card-degree" data-i18n="edu.d4">Master's — Safety, Environment &amp; Enterprise Social Responsibility</div><div class="edu-card-school">Camilo José Cela University · Madrid, Spain</div></div>
+      <div class="edu-card"><div class="edu-card-year">2007</div><div class="edu-card-degree" data-i18n="edu.d5">Forestry Engineer — Bachelor's Degree</div><div class="edu-card-school">Universidad Industrial de Santander · Bucaramanga, Colombia</div></div>
     </div>
-
-    <!-- Languages -->
     <div class="lang-section">
-      <div class="lang-header">// LAYER: languages.shp — 3 features loaded</div>
+      <div class="lang-header" data-i18n="lang.header">// LAYER: languages.shp — 3 features loaded</div>
       <div class="lang-grid">
-        <div class="lang-cell">
-          <div class="lang-name">Español</div>
-          <div class="lang-level">Native</div>
-          <div class="lang-dots">
-            <div class="lang-dot"></div><div class="lang-dot"></div><div class="lang-dot"></div>
-            <div class="lang-dot"></div><div class="lang-dot"></div>
-          </div>
-        </div>
-        <div class="lang-cell">
-          <div class="lang-name">English</div>
-          <div class="lang-level">Fluent</div>
-          <div class="lang-dots">
-            <div class="lang-dot"></div><div class="lang-dot"></div><div class="lang-dot"></div>
-            <div class="lang-dot"></div><div class="lang-dot empty"></div>
-          </div>
-        </div>
-        <div class="lang-cell">
-          <div class="lang-name">Français</div>
-          <div class="lang-level">Advanced</div>
-          <div class="lang-dots">
-            <div class="lang-dot"></div><div class="lang-dot"></div><div class="lang-dot"></div>
-            <div class="lang-dot empty"></div><div class="lang-dot empty"></div>
-          </div>
-        </div>
+        <div class="lang-cell"><div class="lang-name">Español</div><div class="lang-level" data-i18n="lang.native">Native</div><div class="lang-dots"><div class="lang-dot"></div><div class="lang-dot"></div><div class="lang-dot"></div><div class="lang-dot"></div><div class="lang-dot"></div></div></div>
+        <div class="lang-cell"><div class="lang-name">English</div><div class="lang-level" data-i18n="lang.fluent">Fluent</div><div class="lang-dots"><div class="lang-dot"></div><div class="lang-dot"></div><div class="lang-dot"></div><div class="lang-dot"></div><div class="lang-dot empty"></div></div></div>
+        <div class="lang-cell"><div class="lang-name">Français</div><div class="lang-level" data-i18n="lang.advanced">Advanced</div><div class="lang-dots"><div class="lang-dot"></div><div class="lang-dot"></div><div class="lang-dot"></div><div class="lang-dot empty"></div><div class="lang-dot empty"></div></div></div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ── CONTACT ── -->
 <section id="contact">
   <div class="container">
-    <div class="sec-header">
-      <span class="sec-num">[ 05 ]</span>
-      <h2 class="sec-title">Get in <em>Touch</em></h2>
-    </div>
+    <div class="sec-header"><span class="sec-num">[ 05 ]</span><h2 class="sec-title" data-i18n="contact.title">Get in <em>Touch</em></h2></div>
     <div class="contact-panel">
-      <div class="contact-cell">
-        <div class="label">// Email</div>
-        <a href="mailto:ivanmauricioadarme@gmail.com">ivanmauricioadarme@gmail.com</a>
-      </div>
-      <div class="contact-cell">
-        <div class="label">// Phone</div>
-        <a href="tel:+14379743091">+1 437-974-3091</a>
-      </div>
-      <div class="contact-cell">
-        <div class="label">// LinkedIn</div>
-        <a href="https://linkedin.com/in/ivan-mauricio-adarme-72276616" target="_blank">ivan-mauricio-adarme-72276616</a>
-      </div>
+      <div class="contact-cell"><div class="clabel" data-i18n="contact.email">Email</div><a href="mailto:ivanmauricioadarme@gmail.com">ivanmauricioadarme@gmail.com</a></div>
+      <div class="contact-cell"><div class="clabel" data-i18n="contact.phone">Phone</div><a href="tel:+14379743091">+1 437-974-3091</a></div>
+      <div class="contact-cell"><div class="clabel">LinkedIn</div><a href="https://linkedin.com/in/ivan-mauricio-adarme-72276616" target="_blank">ivan-mauricio-adarme-72276616</a></div>
     </div>
   </div>
 </section>
 
-<!-- ── FOOTER ── -->
 <footer>
   <span>© 2026 IVAN MAURICIO ADARME CORNEJO · R.P.F. IN TRAINING #3081</span>
-  <span>ONTARIO, CANADA · GIS SPECIALIST & FORESTRY ENGINEER</span>
+  <span data-i18n="footer.right">ONTARIO, CANADA · GIS SPECIALIST &amp; FORESTRY ENGINEER</span>
 </footer>
 
-<!-- ── MAP CANVAS JS ── -->
 <script>
-(function() {
+/* ── TRANSLATIONS ── */
+const T = {
+  en: {
+    "nav.profile":"PROFILE","nav.experience":"EXPERIENCE","nav.skills":"SKILLS","nav.education":"EDUCATION","nav.contact":"CONTACT",
+    "hero.badge":"GIS SPECIALIST · FORESTRY ENGINEER","hero.title":"Forestry Engineer &amp; GIS Specialist",
+    "contact.email":"Email","contact.phone":"Phone","contact.licence":"Licence","contact.licenceVal":"Ontario BZ Driver's",
+    "about.title":"Professional <em>Profile</em>",
+    "about.p1":"Forestry Engineer with extensive experience in GIS, spatial data management, and environmental analysis. Skilled in developing cartographic products, performing spatial analysis, and maintaining geospatial datasets using ArcGIS Pro and QGIS.",
+    "about.p2":"Experienced in environmental impact assessments, forest inventory, and land stewardship initiatives across Colombia and Canada. Detail-oriented professional committed to the conservation of Ontario's natural landscapes and biodiversity.",
+    "about.p3":"Currently registered as R.P.F. in Training (#3081) with the Ontario Professional Foresters Association and volunteering with Ontario Nature.",
+    "about.competencies":"// Core competencies","tag.spatial":"Spatial Analysis","tag.inventory":"Forest Inventory",
+    "stat.exp":"Years field experience","stat.lang":"Languages spoken","stat.diplomas":"Postgrad diplomas","stat.licence":"Ontario licence class","stat.projects":"Employers &amp; projects","stat.rpf":"In training — OPFA #3081",
+    "exp.title":"Work <em>Experience</em>","exp.present":"Present",
+    "job1.role":"Bus Driver","job1.desc":"Safe and reliable transportation services with strong attention to detail. Full compliance with Ontario traffic regulations and courteous public service delivery.",
+    "job2.role":"Transit Operator","job2.desc":"Daily pre-trip inspections ensuring optimal transit bus performance and passenger safety. Courteous and reliable vehicle operation.",
+    "job3.role":"School Bus Driver","job3.desc":"Ensuring student safety and optimal bus performance on daily routes. Pre-trip inspections and responsible accessible transit service.",
+    "job4.role":"Advanced Professional B","job4.desc":"Implementation of the Environmental Recovery Plan in LISAMA 158. Forest inventories and vegetation characterization across diverse ecosystems. Reforestation and ecosystem restoration initiatives.",
+    "job5.role":"Project Professional II","job5.desc":"Field coordinator for the Forest Compensation Plan. Authored the Flora chapter — including forest structural analysis and GeoDatabase — for the EIA of the Loop 10\" gas pipeline (Mariquita–Gualanday, TGI Colombia).",
+    "job6.role":"Support Engineer","job6.desc":"Authored Environmental and Forest Management Plans. Led field operations and logistics for forest inventories. Maintained structured datasets; data entry, validation and file organization.",
+    "job7.role":"External Consultant — Resident Forestry Engineer","job7.desc":"Forestry offsetting and silvicultural management in El Chocho project, Segovia. Environmental compliance monitoring and reporting.",
+    "job8.role":"MEG Field Monitor","job8.desc":"On-field monitoring of illicit crop eradication operations. Prepared and submitted technical compliance reports to the government of Colombia.",
+    "job9.role":"Forestry Engineer","job9.desc":"Forest inventory and reforestation of La Honda river protection areas with native species. Data documentation and guidance for consistent dataset use.",
+    "job10.role":"Forestry Engineer — Environmental Impact","job10.desc":"Management of environmental impacts during power line construction. Forest inventory and supervision of forest harvesting procedures.",
+    "skills.title":"Technical <em>Skills</em>","skills.gis":"GIS &amp; Spatial Tools","skills.data":"Data &amp; Database","skills.field":"Field &amp; Remote Sensing","skills.forestry":"Forestry &amp; Environment",
+    "skills.fi":"Forest Inventory","skills.reforest":"Reforestation","skills.carto":"Cartography","skills.eco":"Ecosystem Restore",
+    "edu.title":"Education &amp; <em>Certifications</em>",
+    "edu.d1":"Postgraduate Diploma — Remotely Piloted Aerial Systems (RPAS)","edu.d2":"Postgraduate Diploma — Project Management (Environmental)","edu.d3":"Postgraduate Diploma — Social &amp; Solidarity Economy Organizations","edu.d4":"Master's — Safety, Environment &amp; Enterprise Social Responsibility","edu.d5":"Forestry Engineer — Bachelor's Degree",
+    "lang.header":"// LAYER: languages.shp — 3 features loaded","lang.native":"Native","lang.fluent":"Fluent","lang.advanced":"Advanced",
+    "contact.title":"Get in <em>Touch</em>","footer.right":"ONTARIO, CANADA · GIS SPECIALIST &amp; FORESTRY ENGINEER"
+  },
+  es: {
+    "nav.profile":"PERFIL","nav.experience":"EXPERIENCIA","nav.skills":"HABILIDADES","nav.education":"EDUCACIÓN","nav.contact":"CONTACTO",
+    "hero.badge":"ESPECIALISTA SIG · INGENIERO FORESTAL","hero.title":"Ingeniero Forestal y Especialista SIG",
+    "contact.email":"Correo","contact.phone":"Teléfono","contact.licence":"Licencia","contact.licenceVal":"Licencia BZ Ontario",
+    "about.title":"Perfil <em>Profesional</em>",
+    "about.p1":"Ingeniero Forestal con amplia experiencia en SIG, gestión de datos espaciales y análisis ambiental. Especializado en el desarrollo de productos cartográficos, análisis espacial y mantenimiento de conjuntos de datos geoespaciales con ArcGIS Pro y QGIS.",
+    "about.p2":"Experiencia en evaluaciones de impacto ambiental, inventarios forestales e iniciativas de gestión territorial en Colombia y Canadá. Profesional meticuloso comprometido con la conservación de los paisajes naturales y la biodiversidad de Ontario.",
+    "about.p3":"Actualmente registrado como R.P.F. en Formación (#3081) en la Asociación de Ingenieros Forestales de Ontario y voluntario en Ontario Nature.",
+    "about.competencies":"// Competencias clave","tag.spatial":"Análisis Espacial","tag.inventory":"Inventario Forestal",
+    "stat.exp":"Años de experiencia","stat.lang":"Idiomas hablados","stat.diplomas":"Diplomas de posgrado","stat.licence":"Clase licencia Ontario","stat.projects":"Empleadores y proyectos","stat.rpf":"En formación — OPFA #3081",
+    "exp.title":"Experiencia <em>Laboral</em>","exp.present":"Presente",
+    "job1.role":"Conductor de Autobús","job1.desc":"Servicios de transporte seguros y confiables con gran atención al detalle. Cumplimiento pleno de las normas de tránsito de Ontario y servicio al público cortés.",
+    "job2.role":"Operador de Tránsito","job2.desc":"Inspecciones previas al viaje garantizando el rendimiento óptimo del autobús y la seguridad de los pasajeros. Operación cortés y confiable del vehículo.",
+    "job3.role":"Conductor de Autobús Escolar","job3.desc":"Garantizando la seguridad estudiantil y el óptimo desempeño del autobús en rutas diarias. Inspecciones previas y servicio de transporte accesible.",
+    "job4.role":"Profesional Avanzado B","job4.desc":"Implementación del Plan de Recuperación Ambiental en LISAMA 158. Inventarios forestales y caracterización de vegetación en ecosistemas diversos. Iniciativas de reforestación y restauración ecosistémica.",
+    "job5.role":"Profesional de Proyecto II","job5.desc":"Coordinador de campo del Plan de Compensación Forestal. Autor del capítulo de Flora — análisis estructural forestal y GeoBase de Datos — para la EIA del gasoducto Loop 10\" (Mariquita–Gualanday, TGI Colombia).",
+    "job6.role":"Ingeniero de Soporte","job6.desc":"Autor de Planes de Manejo Ambiental y Forestal. Coordinó operaciones de campo para inventarios forestales. Mantuvo conjuntos de datos estructurados y realizó control de calidad.",
+    "job7.role":"Consultor Externo — Ingeniero Forestal Residente","job7.desc":"Compensación forestal y manejo silvícola en el proyecto El Chocho, Municipio de Segovia. Monitoreo de cumplimiento ambiental e informes técnicos.",
+    "job8.role":"Monitor de Campo — Grupos de Erradicación","job8.desc":"Monitoreo en campo de operaciones de erradicación de cultivos ilícitos. Elaboración y presentación de informes de cumplimiento técnico al gobierno de Colombia.",
+    "job9.role":"Ingeniero Forestal","job9.desc":"Inventario forestal y reforestación de áreas de protección del río La Honda con especies nativas. Documentación de datos y lineamientos para uso consistente.",
+    "job10.role":"Ingeniero Forestal — Impacto Ambiental","job10.desc":"Gestión de impactos ambientales durante la construcción de líneas eléctricas. Inventario forestal y supervisión de procedimientos de aprovechamiento.",
+    "skills.title":"Habilidades <em>Técnicas</em>","skills.gis":"SIG y Herramientas Espaciales","skills.data":"Datos y Bases de Datos","skills.field":"Campo y Teledetección","skills.forestry":"Silvicultura y Medio Ambiente",
+    "skills.fi":"Inventario Forestal","skills.reforest":"Reforestación","skills.carto":"Cartografía","skills.eco":"Restauración Ecosistémica",
+    "edu.title":"Educación y <em>Certificaciones</em>",
+    "edu.d1":"Diploma de Posgrado — Sistemas Aéreos Pilotados a Distancia (RPAS)","edu.d2":"Diploma de Posgrado — Gestión de Proyectos (Ambiental)","edu.d3":"Diploma de Posgrado — Gestión de Organizaciones de Economía Social y Solidaria","edu.d4":"Maestría — Seguridad, Medio Ambiente y Responsabilidad Social Empresarial","edu.d5":"Ingeniero Forestal — Título de Grado",
+    "lang.header":"// CAPA: idiomas.shp — 3 entidades cargadas","lang.native":"Nativo","lang.fluent":"Fluido","lang.advanced":"Avanzado",
+    "contact.title":"Ponte en <em>Contacto</em>","footer.right":"ONTARIO, CANADÁ · ESPECIALISTA SIG E INGENIERO FORESTAL"
+  },
+  fr: {
+    "nav.profile":"PROFIL","nav.experience":"EXPÉRIENCE","nav.skills":"COMPÉTENCES","nav.education":"FORMATION","nav.contact":"CONTACT",
+    "hero.badge":"SPÉCIALISTE SIG · INGÉNIEUR FORESTIER","hero.title":"Ingénieur Forestier &amp; Spécialiste SIG",
+    "contact.email":"Courriel","contact.phone":"Téléphone","contact.licence":"Permis","contact.licenceVal":"Permis BZ Ontario",
+    "about.title":"Profil <em>Professionnel</em>",
+    "about.p1":"Ingénieur forestier avec une vaste expérience en SIG, gestion de données spatiales et analyse environnementale. Spécialisé dans le développement de produits cartographiques, l'analyse spatiale et la gestion de jeux de données géospatiales avec ArcGIS Pro et QGIS.",
+    "about.p2":"Expérimenté en évaluations d'impact environnemental, inventaires forestiers et initiatives de gestion des terres en Colombie et au Canada. Professionnel rigoureux engagé dans la conservation des paysages naturels et de la biodiversité de l'Ontario.",
+    "about.p3":"Actuellement inscrit comme R.P.F. en formation (#3081) auprès de l'Association des forestiers professionnels de l'Ontario et bénévole à Ontario Nature.",
+    "about.competencies":"// Compétences clés","tag.spatial":"Analyse Spatiale","tag.inventory":"Inventaire Forestier",
+    "stat.exp":"Années d'expérience","stat.lang":"Langues parlées","stat.diplomas":"Diplômes de 2e cycle","stat.licence":"Classe permis Ontario","stat.projects":"Employeurs et projets","stat.rpf":"En formation — OPFA #3081",
+    "exp.title":"Expérience <em>Professionnelle</em>","exp.present":"Présent",
+    "job1.role":"Conducteur d'Autobus","job1.desc":"Services de transport sûrs et fiables avec une grande attention aux détails. Conformité totale aux règlements de la circulation de l'Ontario et service courtois au public.",
+    "job2.role":"Opérateur de Transit","job2.desc":"Inspections quotidiennes avant départ assurant la performance optimale du bus et la sécurité des passagers. Conduite courtoise et fiable.",
+    "job3.role":"Conducteur d'Autobus Scolaire","job3.desc":"Sécurité des élèves et performance optimale du bus sur les trajets quotidiens. Inspections préalables et service de transport accessible.",
+    "job4.role":"Professionnel Avancé B","job4.desc":"Mise en œuvre du Plan de Récupération Environnementale à LISAMA 158. Inventaires forestiers et caractérisation de la végétation dans divers écosystèmes. Initiatives de reboisement et de restauration écosystémique.",
+    "job5.role":"Professionnel de Projet II","job5.desc":"Coordinateur de terrain pour le Plan de Compensation Forestière. Auteur du chapitre Flore — analyse structurelle forestière et GéoBase de Données — pour l'EIE du gazoduc Loop 10\" (Mariquita–Gualanday, TGI Colombie).",
+    "job6.role":"Ingénieur de Support","job6.desc":"Auteur de Plans de Gestion Environnementale et Forestière. Coordination des opérations de terrain pour les inventaires forestiers. Maintien de jeux de données structurés et contrôle qualité.",
+    "job7.role":"Consultant Externe — Ingénieur Forestier Résident","job7.desc":"Compensation forestière et gestion sylvicole dans le projet El Chocho, Municipalité de Segovia. Suivi de conformité environnementale et rapports techniques.",
+    "job8.role":"Moniteur de Terrain — Groupes d'Éradication","job8.desc":"Surveillance sur le terrain des opérations d'éradication de cultures illicites. Préparation et soumission de rapports de conformité technique au gouvernement colombien.",
+    "job9.role":"Ingénieur Forestier","job9.desc":"Inventaire forestier et reboisement des zones de protection du fleuve La Honda avec des espèces indigènes. Documentation et lignes directrices pour une utilisation cohérente des données.",
+    "job10.role":"Ingénieur Forestier — Impact Environnemental","job10.desc":"Gestion des impacts environnementaux lors de la construction de lignes électriques. Inventaire forestier et supervision des procédures d'exploitation.",
+    "skills.title":"Compétences <em>Techniques</em>","skills.gis":"SIG et Outils Spatiaux","skills.data":"Données et Bases de Données","skills.field":"Terrain et Télédétection","skills.forestry":"Sylviculture et Environnement",
+    "skills.fi":"Inventaire Forestier","skills.reforest":"Reboisement","skills.carto":"Cartographie","skills.eco":"Restauration Écosystémique",
+    "edu.title":"Formation &amp; <em>Certifications</em>",
+    "edu.d1":"Diplôme de 2e cycle — Systèmes aériens pilotés à distance (RPAS)","edu.d2":"Diplôme de 2e cycle — Gestion de projets (Environnemental)","edu.d3":"Diplôme de 2e cycle — Gestion d'organisations d'économie sociale et solidaire","edu.d4":"Maîtrise — Sécurité, Environnement et Responsabilité Sociale d'Entreprise","edu.d5":"Ingénieur Forestier — Diplôme de Licence",
+    "lang.header":"// COUCHE : langues.shp — 3 entités chargées","lang.native":"Natif","lang.fluent":"Courant","lang.advanced":"Avancé",
+    "contact.title":"Prendre <em>Contact</em>","footer.right":"ONTARIO, CANADA · SPÉCIALISTE SIG &amp; INGÉNIEUR FORESTIER"
+  }
+};
+
+/* ── LANGUAGE ENGINE ── */
+let currentLang = 'en';
+function setLang(lang) {
+  if (lang === currentLang) return;
+  currentLang = lang;
+  document.documentElement.lang = lang;
+  document.querySelectorAll('.lang-btn').forEach(btn => {
+    btn.classList.toggle('active', btn.textContent.toLowerCase() === lang);
+  });
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const val = T[lang][el.getAttribute('data-i18n')];
+    if (val !== undefined) el.innerHTML = val;
+  });
+}
+
+/* ── MAP CANVAS ── */
+(function(){
   const canvas = document.getElementById('mapCanvas');
   const ctx = canvas.getContext('2d');
+  function resize(){ canvas.width=canvas.offsetWidth; canvas.height=canvas.offsetHeight; }
+  resize(); window.addEventListener('resize', resize);
 
-  function resize() {
-    canvas.width = canvas.offsetWidth;
-    canvas.height = canvas.offsetHeight;
-  }
-  resize();
-  window.addEventListener('resize', () => { resize(); });
-
-  // GIS-style map points (normalized 0–1 coords)
-  const points = [
-    { x: 0.72, y: 0.28, label: 'LISAMA 158', active: true },
-    { x: 0.55, y: 0.55, label: 'ONTARIO HQ', active: true, main: true },
-    { x: 0.38, y: 0.42, label: 'TGI PIPELINE', active: false },
-    { x: 0.80, y: 0.65, label: 'NORTH YORK', active: true },
-    { x: 0.25, y: 0.72, label: 'ECOPETROL', active: false },
-    { x: 0.62, y: 0.18, label: 'RICHMOND HILL', active: true },
-    { x: 0.15, y: 0.35, label: 'AMAZONAS', active: false },
-    { x: 0.88, y: 0.45, label: 'FANSHAWE', active: false },
-    { x: 0.45, y: 0.82, label: 'ANTIOQUIA', active: false },
-    { x: 0.70, y: 0.78, label: 'TORONTO', active: true },
+  const pts=[
+    {x:0.72,y:0.28,label:'LISAMA 158',active:true},
+    {x:0.55,y:0.55,label:'ONTARIO HQ',active:true,main:true},
+    {x:0.38,y:0.42,label:'TGI PIPELINE',active:false},
+    {x:0.80,y:0.65,label:'NORTH YORK',active:true},
+    {x:0.25,y:0.72,label:'ECOPETROL',active:false},
+    {x:0.62,y:0.18,label:'RICHMOND HILL',active:true},
+    {x:0.15,y:0.35,label:'AMAZONAS',active:false},
+    {x:0.88,y:0.45,label:'FANSHAWE',active:false},
+    {x:0.45,y:0.82,label:'ANTIOQUIA',active:false},
+    {x:0.70,y:0.78,label:'TORONTO',active:true},
   ];
-
-  // Contour paths (simplified ellipses as bezier)
-  const contours = [
-    { cx: 0.55, cy: 0.55, rx: 0.38, ry: 0.22, rot: -15 },
-    { cx: 0.55, cy: 0.55, rx: 0.28, ry: 0.16, rot: -15 },
-    { cx: 0.55, cy: 0.55, rx: 0.18, ry: 0.10, rot: -15 },
-    { cx: 0.55, cy: 0.55, rx: 0.10, ry: 0.056, rot: -15 },
+  const contours=[
+    {cx:0.55,cy:0.55,rx:0.38,ry:0.22,rot:-15},
+    {cx:0.55,cy:0.55,rx:0.28,ry:0.16,rot:-15},
+    {cx:0.55,cy:0.55,rx:0.18,ry:0.10,rot:-15},
+    {cx:0.55,cy:0.55,rx:0.10,ry:0.056,rot:-15},
   ];
+  const edges=[[0,2],[2,4],[1,3],[1,5],[1,9],[3,9],[5,7],[6,4],[8,4],[1,7]];
+  let tick=0, rev=0;
 
-  // Connections between points
-  const edges = [
-    [0, 2], [2, 4], [1, 3], [1, 5], [1, 9],
-    [3, 9], [5, 7], [6, 4], [8, 4], [1, 7],
-  ];
-
-  let tick = 0;
-  let pointReveal = 0; // how many points revealed so far
-  const revealInterval = 40; // ticks between reveals
-
-  function drawGrid(w, h) {
-    const step = 60;
-    ctx.strokeStyle = 'rgba(45,90,45,0.15)';
-    ctx.lineWidth = 0.5;
-    for (let x = 0; x < w; x += step) {
-      ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, h); ctx.stroke();
-    }
-    for (let y = 0; y < h; y += step) {
-      ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(w, y); ctx.stroke();
-    }
-    // Coord labels on grid
-    ctx.fillStyle = 'rgba(45,90,45,0.25)';
-    ctx.font = '8px IBM Plex Mono, monospace';
-    for (let x = step; x < w; x += step * 3) {
-      for (let y = step; y < h; y += step * 3) {
-        const lat = (43.65 + (y / h) * 0.1).toFixed(3);
-        const lon = (79.38 + (x / w) * 0.1).toFixed(3);
-        ctx.fillText(`${lat}°N`, x + 3, y - 3);
-      }
-    }
-  }
-
-  function drawContours(w, h) {
-    contours.forEach((c, i) => {
-      ctx.save();
-      ctx.translate(c.cx * w, c.cy * h);
-      ctx.rotate(c.rot * Math.PI / 180);
-      ctx.beginPath();
-      ctx.ellipse(0, 0, c.rx * w, c.ry * h, 0, 0, Math.PI * 2);
-      ctx.strokeStyle = `rgba(61,122,61,${0.18 - i * 0.03})`;
-      ctx.lineWidth = 1;
-      ctx.setLineDash([4, 6]);
-      ctx.stroke();
-      ctx.restore();
+  function draw(){
+    const w=canvas.width, h=canvas.height;
+    ctx.clearRect(0,0,w,h);
+    // Contours
+    contours.forEach((c,i)=>{
+      ctx.save(); ctx.translate(c.cx*w,c.cy*h); ctx.rotate(c.rot*Math.PI/180);
+      ctx.beginPath(); ctx.ellipse(0,0,c.rx*w,c.ry*h,0,0,Math.PI*2);
+      ctx.strokeStyle=`rgba(61,122,61,${0.18-i*0.03})`; ctx.lineWidth=1;
+      ctx.setLineDash([4,6]); ctx.stroke(); ctx.restore();
+    }); ctx.setLineDash([]);
+    // Edges
+    edges.forEach(([a,b],i)=>{
+      if(i>=Math.min(rev,edges.length)) return;
+      const pa=pts[a],pb=pts[b];
+      ctx.beginPath(); ctx.moveTo(pa.x*w,pa.y*h);
+      ctx.quadraticCurveTo((pa.x+pb.x)/2*w+Math.sin(i*1.3)*30,(pa.y+pb.y)/2*h+Math.cos(i*1.1)*20,pb.x*w,pb.y*h);
+      ctx.strokeStyle='rgba(106,170,106,0.18)'; ctx.lineWidth=1; ctx.setLineDash([3,5]); ctx.stroke(); ctx.setLineDash([]);
     });
-    ctx.setLineDash([]);
-  }
-
-  function drawEdges(w, h) {
-    edges.forEach(([a, b], i) => {
-      if (i >= Math.min(pointReveal, edges.length)) return;
-      const pa = points[a], pb = points[b];
-      ctx.beginPath();
-      ctx.moveTo(pa.x * w, pa.y * h);
-      // Slight curve
-      const mx = (pa.x + pb.x) / 2 * w + (Math.sin(i * 1.3) * 30);
-      const my = (pa.y + pb.y) / 2 * h + (Math.cos(i * 1.1) * 20);
-      ctx.quadraticCurveTo(mx, my, pb.x * w, pb.y * h);
-      ctx.strokeStyle = 'rgba(106,170,106,0.18)';
-      ctx.lineWidth = 1;
-      ctx.setLineDash([3, 5]);
-      ctx.stroke();
-      ctx.setLineDash([]);
+    // Points
+    pts.forEach((p,i)=>{
+      if(i>=rev) return;
+      const px=p.x*w,py=p.y*h,age=rev-i,ph=(tick*0.05+i*0.8)%(Math.PI*2);
+      const pr=6+Math.sin(ph)*10+10,pa2=Math.max(0,0.35-pr/60);
+      ctx.beginPath(); ctx.arc(px,py,pr,0,Math.PI*2);
+      ctx.strokeStyle=p.main?`rgba(212,160,23,${pa2})`:`rgba(106,170,106,${pa2*0.7})`; ctx.lineWidth=1; ctx.stroke();
+      const ch=8; ctx.strokeStyle=p.main?'rgba(212,160,23,0.6)':'rgba(106,170,106,0.4)'; ctx.lineWidth=0.8;
+      ctx.beginPath(); ctx.moveTo(px-ch,py); ctx.lineTo(px+ch,py); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(px,py-ch); ctx.lineTo(px,py+ch); ctx.stroke();
+      ctx.beginPath(); ctx.arc(px,py,p.main?4:2.5,0,Math.PI*2);
+      ctx.fillStyle=p.main?'#d4a017':(p.active?'#6aaa6a':'rgba(106,170,106,0.5)'); ctx.fill();
+      if(age>5){ ctx.fillStyle=p.main?'rgba(212,160,23,0.9)':'rgba(184,216,184,0.7)'; ctx.font=`${p.main?9:7}px IBM Plex Mono,monospace`; ctx.fillText(p.label,px+8,py-6); }
     });
+    // Scan line
+    const sy=((tick*1.5)%(h+40))-20;
+    const sg=ctx.createLinearGradient(0,sy-20,0,sy+20);
+    sg.addColorStop(0,'transparent'); sg.addColorStop(0.5,'rgba(45,90,45,0.06)'); sg.addColorStop(1,'transparent');
+    ctx.fillStyle=sg; ctx.fillRect(0,sy-20,w,40);
+    if(tick%40===0&&rev<pts.length) rev++;
+    tick++; requestAnimationFrame(draw);
   }
-
-  function drawPoints(w, h) {
-    points.forEach((p, i) => {
-      if (i >= pointReveal) return;
-      const px = p.x * w, py = p.y * h;
-      const age = pointReveal - i; // how long it's been visible
-      const pingPhase = (tick * 0.05 + i * 0.8) % (Math.PI * 2);
-      const pingR = 6 + Math.sin(pingPhase) * 10 + 10;
-      const pingAlpha = Math.max(0, 0.35 - pingR / 60);
-
-      // Ping ring
-      ctx.beginPath();
-      ctx.arc(px, py, pingR, 0, Math.PI * 2);
-      ctx.strokeStyle = p.main
-        ? `rgba(212,160,23,${pingAlpha})`
-        : `rgba(106,170,106,${pingAlpha * 0.7})`;
-      ctx.lineWidth = 1;
-      ctx.stroke();
-
-      // Second ping ring (offset phase)
-      const pingR2 = 6 + Math.sin(pingPhase + 1) * 8 + 6;
-      const pingAlpha2 = Math.max(0, 0.2 - pingR2 / 50);
-      ctx.beginPath();
-      ctx.arc(px, py, pingR2, 0, Math.PI * 2);
-      ctx.strokeStyle = p.main
-        ? `rgba(212,160,23,${pingAlpha2})`
-        : `rgba(106,170,106,${pingAlpha2})`;
-      ctx.lineWidth = 0.5;
-      ctx.stroke();
-
-      // Crosshair
-      const ch = 8;
-      ctx.strokeStyle = p.main ? 'rgba(212,160,23,0.6)' : 'rgba(106,170,106,0.4)';
-      ctx.lineWidth = 0.8;
-      ctx.beginPath(); ctx.moveTo(px - ch, py); ctx.lineTo(px + ch, py); ctx.stroke();
-      ctx.beginPath(); ctx.moveTo(px, py - ch); ctx.lineTo(px, py + ch); ctx.stroke();
-
-      // Center dot
-      ctx.beginPath();
-      ctx.arc(px, py, p.main ? 4 : 2.5, 0, Math.PI * 2);
-      ctx.fillStyle = p.main ? '#d4a017' : (p.active ? '#6aaa6a' : 'rgba(106,170,106,0.5)');
-      ctx.fill();
-
-      // Label
-      if (age > 5) {
-        ctx.fillStyle = p.main ? 'rgba(212,160,23,0.9)' : 'rgba(184,216,184,0.7)';
-        ctx.font = `${p.main ? 9 : 7}px IBM Plex Mono, monospace`;
-        ctx.letterSpacing = '0.08em';
-        ctx.fillText(p.label, px + 8, py - 6);
-      }
-    });
-  }
-
-  function drawScanLine(w, h) {
-    const y = ((tick * 1.5) % (h + 40)) - 20;
-    const grad = ctx.createLinearGradient(0, y - 20, 0, y + 20);
-    grad.addColorStop(0, 'transparent');
-    grad.addColorStop(0.5, 'rgba(45,90,45,0.06)');
-    grad.addColorStop(1, 'transparent');
-    ctx.fillStyle = grad;
-    ctx.fillRect(0, y - 20, w, 40);
-  }
-
-  function frame() {
-    const w = canvas.width, h = canvas.height;
-    ctx.clearRect(0, 0, w, h);
-
-    drawGrid(w, h);
-    drawContours(w, h);
-    drawEdges(w, h);
-    drawPoints(w, h);
-    drawScanLine(w, h);
-
-    // Reveal points progressively
-    if (tick % revealInterval === 0 && pointReveal < points.length) {
-      pointReveal++;
-    }
-
-    tick++;
-    requestAnimationFrame(frame);
-  }
-
-  frame();
+  draw();
 })();
 </script>
 </body>
